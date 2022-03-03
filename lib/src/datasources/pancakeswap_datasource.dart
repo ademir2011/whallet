@@ -6,7 +6,12 @@ class PancakeswapDatasource {
     final dio = Dio();
     final response = await dio.get('https://api.pancakeswap.info/api/v2/tokens/${token.address}');
 
-    return Token.fromMap(response.data['data'] as Map<String, dynamic>)
-        .copyWith(usdPrice: double.parse(response.data['data']['price']));
+    return token.copyWith(
+      name: response.data['data']['name'],
+      symbol: response.data['data']['symbol'],
+      usdPrice: double.parse(
+        response.data['data']['price'],
+      ),
+    );
   }
 }
