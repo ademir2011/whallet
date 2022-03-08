@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ElevatedButtonWidget extends StatelessWidget {
+  final String title;
+  final void Function() onPressed;
   final Icon? leftIcon;
   final Icon? rightIcon;
 
   const ElevatedButtonWidget({
     Key? key,
+    required this.onPressed,
+    required this.title,
     this.leftIcon,
     this.rightIcon,
   }) : super(key: key);
@@ -27,14 +31,14 @@ class ElevatedButtonWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               child: Text(
-                'Entrar',
+                title,
                 style: Theme.of(context).textTheme.labelSmall,
               ),
             ),
             if (rightIcon != null) rightIcon!,
           ],
         ),
-        onPressed: () {},
+        onPressed: onPressed,
       ),
     );
   }

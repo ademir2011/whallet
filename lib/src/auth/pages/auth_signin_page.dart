@@ -5,6 +5,7 @@ import 'package:whallet/src/widgets/auth_header_container_widget.dart';
 import 'package:whallet/src/widgets/elevated_button_widget.dart';
 import 'package:whallet/src/widgets/header_widget.dart';
 import 'package:whallet/src/widgets/textformfield_widget.dart';
+import 'package:whallet/utils/routes.dart';
 
 class AuthSigninPage extends StatefulWidget {
   const AuthSigninPage({Key? key}) : super(key: key);
@@ -61,11 +62,19 @@ class _AuthSigninPageState extends State<AuthSigninPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Esqueceu sua senha?',
-                style: Theme.of(context).textTheme.bodyMedium,
+              TextButton(
+                onPressed: () => Navigator.pushNamed(
+                  context,
+                  AppRoute.AUTH_RECOVERY,
+                ),
+                child: Text(
+                  'Esqueceu sua senha?',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
               ElevatedButtonWidget(
+                title: 'Entrar',
+                onPressed: () {},
                 rightIcon: Icon(
                   Icons.arrow_forward_rounded,
                   color: Theme.of(context).colorScheme.secondary,
@@ -86,9 +95,10 @@ class _AuthSigninPageState extends State<AuthSigninPage> {
                     text: 'CADASTRE-SE AQUI',
                     style: Theme.of(context).textTheme.bodyLarge,
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        print('NAVIGATOR');
-                      },
+                      ..onTap = () => Navigator.pushNamed(
+                            context,
+                            AppRoute.AUTH_SIGNUP,
+                          ),
                   ),
                   TextSpan(
                     text: ' com e-mail e senha!',

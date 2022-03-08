@@ -28,8 +28,8 @@ class AuthHeaderContainerWidget extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 35),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 50),
                   Text(
                     title,
                     style: Theme.of(context).textTheme.titleLarge,

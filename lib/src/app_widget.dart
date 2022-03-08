@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:whallet/src/auth/pages/auth_recovery_page.dart';
 import 'package:whallet/src/auth/pages/auth_signin_page.dart';
+import 'package:whallet/src/auth/pages/auth_signup_page.dart';
 import 'package:whallet/src/init/pages/splashscreen_page.dart';
 import 'package:whallet/utils/routes.dart';
 
@@ -88,6 +90,8 @@ class _AppWidgetState extends State<AppWidget> {
       routes: {
         AppRoute.SPLASHSCREEN: (ctx) => const SplashscreenPage(),
         AppRoute.AUTH_SIGNIN: (ctx) => const AuthSigninPage(),
+        AppRoute.AUTH_SIGNUP: (ctx) => const AuthSighUpPage(),
+        AppRoute.AUTH_RECOVERY: (ctx) => const AuthRecoveryPage(),
       },
     );
   }
