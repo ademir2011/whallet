@@ -1,21 +1,29 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:whallet/src/models/token.dart';
-import 'package:whallet/src/services/token_service.dart';
+import 'package:whallet/src/portifolio/models/token_model.dart';
+import 'package:whallet/src/portifolio/services/token_service.dart';
 
 void main() {
-  test('Dados utilizando símbolo', () async {
-    final tokenService = TokenService();
-    final sampleSymbol = await tokenService.getTokenByAddress(
-      Token.symbol(symbol: 'mht'),
-    );
-    print(sampleSymbol.toString());
+  late TokenService tokenService;
+
+  setUp(() {
+    tokenService = TokenService();
   });
 
-  test('Dados utilizando endereço', () async {
-    final tokenService = TokenService();
-    final sampleAddress = await tokenService.getTokenByAddress(
-      Token.address(address: '0x5cb2c3ed882e37da610f9ef5b0fa25514d7bc85b'),
+  test('Deve retornar um tokenModel para o Símbolo CAKE', () {
+    final tokenModel = TokenModel(symbol: 'CAKE', address: '');
+    final token = tokenService.getTokenByInfo(tokenModel: tokenModel);
+    expect(token, isNotNull);
+  });
+  test('Deve retornar null para o Símbolo asdf', () {
+    final tokenModel = TokenModel(symbol: 'asdf', address: '');
+    final token = tokenService.getTokenByInfo(tokenModel: tokenModel);
+    expect(token, isNull);
+  });
+
+  test('Deve retornar um TokenModel para o endereço 0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82', () async {
+    final sampleAddress = await tokenService.getTokenByInfo(
+      tokenModel: TokenModel.address(address: '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82'),
     );
-    print(sampleAddress.toString());
+    expect(sampleAddress, isNotNull);
   });
 }
