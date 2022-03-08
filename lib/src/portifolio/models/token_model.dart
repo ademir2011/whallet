@@ -26,13 +26,11 @@ class TokenModel {
   }) : assert(address == null || RegExp(r'0x\w+').hasMatch(address), 'Endereço inválido');
 
   factory TokenModel.address({required String address}) => TokenModel(
-        symbol: '',
         address: address,
       );
 
   factory TokenModel.symbol({required String symbol}) => TokenModel(
         symbol: symbol,
-        address: '',
       );
 
   TokenModel copyWith({

@@ -6,7 +6,7 @@ class TokenRepository {
   final coingeckoDatasource = CoingeckoDatasource();
   final pancakeswapDatasource = PancakeswapDatasource();
 
-  Future<TokenModel> getTokenByInfo(TokenModel tokenModel) async {
+  Future<TokenModel?> getTokenByInfo(TokenModel tokenModel) async {
     if (tokenModel.symbol != null) {
       return coingeckoDatasource.getTokenBySymbol(tokenModel: tokenModel);
     } else if (tokenModel.address != null) {

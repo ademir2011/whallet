@@ -14,11 +14,12 @@ class CoingeckoDatasource {
     return tokensFilter.map((token) => TokenModel(symbol: token['symbol'], address: '', name: token['name'])).toList();
   }
 
-  TokenModel getTokenByList({required List<TokenModel> tokens, required String tokenId}) {
-    return tokens.where((token) => token.tokenId == tokenId).first;
+  TokenModel? getTokenByList({required List<TokenModel> tokens, required String tokenId}) {
+    List<TokenModel> tokensFilter = tokens.where((token) => token.tokenId == tokenId).toList();
+    return tokensFilter.isNotEmpty ? tokensFilter.first : null;
   }
 
-  Future<TokenModel> getTokenBySymbol({required TokenModel tokenModel}) async {
+  Future<TokenModel?> getTokenBySymbol({required TokenModel tokenModel}) async {
     final tokens = await getTokensBySymbol(tokenModel: tokenModel);
     return getTokenByList(tokens: tokens, tokenId: tokenModel.symbol!);
   }

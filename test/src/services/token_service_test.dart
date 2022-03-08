@@ -10,20 +10,25 @@ void main() {
   });
 
   test('Deve retornar um tokenModel para o Símbolo CAKE', () {
-    final tokenModel = TokenModel(symbol: 'CAKE', address: '');
+    final tokenModel = TokenModel(symbol: 'CAKE');
     final token = tokenService.getTokenByInfo(tokenModel: tokenModel);
     expect(token, isNotNull);
   });
-  test('Deve retornar null para o Símbolo asdf', () {
-    final tokenModel = TokenModel(symbol: 'asdf', address: '');
-    final token = tokenService.getTokenByInfo(tokenModel: tokenModel);
+  test('Deve retornar null para o Símbolo asdf', () async {
+    final tokenModel = TokenModel(symbol: 'asdf');
+    final token = await tokenService.getTokenByInfo(tokenModel: tokenModel);
     expect(token, isNull);
   });
 
   test('Deve retornar um TokenModel para o endereço 0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82', () async {
-    final sampleAddress = await tokenService.getTokenByInfo(
-      tokenModel: TokenModel.address(address: '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82'),
-    );
+    final tokenModel = TokenModel.address(address: '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82');
+    final sampleAddress = await tokenService.getTokenByInfo(tokenModel: tokenModel);
     expect(sampleAddress, isNotNull);
+  });
+
+  test('Deve retornar null para o endereço 0x0esdasd22', () async {
+    final tokenModel = TokenModel.address(address: '0x0esdasd22');
+    final sampleAddress = await tokenService.getTokenByInfo(tokenModel: tokenModel);
+    expect(sampleAddress, isNull);
   });
 }
