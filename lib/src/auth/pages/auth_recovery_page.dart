@@ -18,6 +18,7 @@ class _AuthRecoveryPageState extends State<AuthRecoveryPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    authRecoveryStore.addListener(() => setState(() {}));
     authRecoveryStore.addFocusListeners(() => setState(() {}));
   }
 
@@ -38,8 +39,11 @@ class _AuthRecoveryPageState extends State<AuthRecoveryPage> {
         ),
         const SizedBox(height: 200),
         AuthFooterWidget(
+          isLoading: authRecoveryStore.isLoading,
           title: 'Recuperar',
-          onPressed: () {},
+          onPressed: () {
+            authRecoveryStore.recovery();
+          },
         ),
       ]),
     );

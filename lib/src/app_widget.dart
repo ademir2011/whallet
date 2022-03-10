@@ -85,6 +85,7 @@ class _AppWidgetState extends State<AppWidget> {
           color: Color(0xff04E76F),
         ),
         cardColor: const Color(0xff323238),
+        errorColor: const Color(0xffDC3545),
       ),
       home: const SplashscreenPage(),
       routes: {

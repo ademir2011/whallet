@@ -24,7 +24,6 @@ class AuthHeaderContainerWidget extends StatelessWidget {
           children: [
             HeaderWidget(height: size.height * 0.125),
             Container(
-              height: size.height * 0.875,
               margin: const EdgeInsets.symmetric(horizontal: 35),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

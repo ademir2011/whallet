@@ -1,17 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:whallet/src/auth/stores/auth_store.dart';
 
-class AuthRecoveryStore {
-  final emailController = TextEditingController();
-
-  final emailFocus = FocusNode();
-
-  String? emailValidator(String? value) => null;
-
-  void addFocusListeners(void Function() callback) {
-    emailFocus.addListener(callback);
-  }
-
-  void disposeAllFocus() {
-    emailFocus.dispose();
+class AuthRecoveryStore extends AuthStore {
+  void recovery() {
+    toogleLoading();
+    Future.delayed(const Duration(seconds: 2)).then((value) => toogleLoading());
   }
 }

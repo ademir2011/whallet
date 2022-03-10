@@ -1,31 +1,23 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:whallet/src/auth/stores/auth_store.dart';
 
-class AuthSigninStore {
-  late final FocusNode _emailFocus;
-  late final FocusNode _passwordFocus;
+class AuthSigninStore extends AuthStore {
+  final _formKey = GlobalKey<FormState>();
 
-  FocusNode get emailFocus => _emailFocus;
-  FocusNode get passwordFocus => _passwordFocus;
+  GlobalKey<FormState> get formKey => _formKey;
+  Function() get submit => _submit;
 
-  void initFocusNodes() {
-    _emailFocus = FocusNode();
-    _passwordFocus = FocusNode();
+  void signIn() {
+    toogleLoading();
+    Future.delayed(const Duration(seconds: 2)).then((value) {
+      toogleLoading();
+    });
   }
 
-  void addFocusLiteners(void Function() callback) {
-    _emailFocus.addListener(callback);
-    _passwordFocus.addListener(callback);
-  }
-
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  String? emailValidator(value) {}
-
-  String? passwordValidator(value) {}
-
-  void focusNodesDispose() {
-    _emailFocus.dispose();
-    _passwordFocus.dispose();
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      signIn();
+    }
+    notifyListeners();
   }
 }

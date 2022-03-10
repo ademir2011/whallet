@@ -19,6 +19,7 @@ class _AuthSighUpPageState extends State<AuthSighUpPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    authSignUpStore.addListener(() => setState(() {}));
     authSignUpStore.addFocusListeners(() => setState(() {}));
   }
 
@@ -26,7 +27,7 @@ class _AuthSighUpPageState extends State<AuthSighUpPage> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    authSignUpStore.disposeAllFocus();
+    authSignUpStore.disposeAll();
   }
 
   @override
@@ -37,39 +38,43 @@ class _AuthSighUpPageState extends State<AuthSighUpPage> {
       title: 'Cadastro',
       subtitle: 'Informe seus dados',
       size: size,
-      child: Column(
-        children: [
-          TextFormFieldWidget(
-            hintText: 'E-mail',
-            focusNode: authSignUpStore.emailFocus,
-            icon: const Icon(Icons.email),
-            controller: authSignUpStore.emailController,
-            validator: authSignUpStore.emailValidator,
-          ),
-          const SizedBox(height: 20),
-          TextFormFieldWidget(
-            hintText: 'Senha',
-            focusNode: authSignUpStore.passwordFocus,
-            controller: authSignUpStore.passwordController,
-            validator: authSignUpStore.passwordValidator,
-            icon: const Icon(Icons.password),
-            isPassword: true,
-          ),
-          const SizedBox(height: 20),
-          TextFormFieldWidget(
-            hintText: 'Confirmar senha',
-            focusNode: authSignUpStore.confirmPasswordFocus,
-            controller: authSignUpStore.confirmPasswordController,
-            validator: authSignUpStore.confirmPasswordValidator,
-            icon: const Icon(Icons.password),
-            isPassword: true,
-          ),
-          const SizedBox(height: 100),
-          AuthFooterWidget(
-            title: 'Cadastrar',
-            onPressed: () {},
-          ),
-        ],
+      child: Form(
+        key: authSignUpStore.formKey,
+        child: Column(
+          children: [
+            TextFormFieldWidget(
+              hintText: 'E-mail',
+              focusNode: authSignUpStore.emailFocus,
+              icon: const Icon(Icons.email),
+              controller: authSignUpStore.emailController,
+              validator: authSignUpStore.emailValidator,
+            ),
+            const SizedBox(height: 15),
+            TextFormFieldWidget(
+              hintText: 'Senha',
+              focusNode: authSignUpStore.passwordFocus,
+              controller: authSignUpStore.passwordController,
+              validator: authSignUpStore.passwordValidator,
+              icon: const Icon(Icons.password),
+              isPassword: true,
+            ),
+            const SizedBox(height: 15),
+            TextFormFieldWidget(
+              hintText: 'Confirmar senha',
+              focusNode: authSignUpStore.confirmPasswordFocus,
+              controller: authSignUpStore.confirmPasswordController,
+              validator: authSignUpStore.confirmPasswordValidator,
+              icon: const Icon(Icons.password),
+              isPassword: true,
+            ),
+            const SizedBox(height: 75),
+            AuthFooterWidget(
+              isLoading: authSignUpStore.isLoading,
+              title: 'Cadastrar',
+              onPressed: authSignUpStore.submit,
+            ),
+          ],
+        ),
       ),
     );
   }

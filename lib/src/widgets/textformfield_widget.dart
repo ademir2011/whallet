@@ -20,37 +20,39 @@ class TextFormFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(seconds: 1),
-      decoration: BoxDecoration(
-        boxShadow: focusNode.hasFocus
-            ? [
-                BoxShadow(color: Theme.of(context).colorScheme.primary.withOpacity(.25), blurRadius: 20),
-                BoxShadow(color: Theme.of(context).colorScheme.primary.withOpacity(.25), blurRadius: 10),
-              ]
-            : [],
-      ),
-      child: TextFormField(
-        controller: controller,
-        validator: validator,
-        focusNode: focusNode,
-        obscureText: isPassword,
-        decoration: InputDecoration(
-          fillColor: Theme.of(context).cardColor,
-          filled: true,
-          prefixIcon: icon,
-          hintText: hintText,
-          hintStyle: Theme.of(context).textTheme.bodyMedium,
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-            borderSide: BorderSide(
-              color: focusNode.hasFocus ? Theme.of(context).colorScheme.primary : Colors.transparent,
-            ),
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      focusNode: focusNode,
+      obscureText: isPassword,
+      decoration: InputDecoration(
+        fillColor: Theme.of(context).cardColor,
+        filled: true,
+        prefixIcon: icon,
+        hintText: hintText,
+        hintStyle: Theme.of(context).textTheme.bodyMedium,
+        focusColor: Colors.red,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(
+            color: focusNode.hasFocus ? Theme.of(context).colorScheme.primary : Colors.transparent,
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-            borderSide: BorderSide.none,
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(
+            color: Theme.of(context).errorColor,
           ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(
+            color: focusNode.hasFocus ? Theme.of(context).errorColor : Colors.transparent,
+          ),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide.none,
         ),
       ),
     );
