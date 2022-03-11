@@ -3,6 +3,7 @@ import 'package:whallet/src/auth/pages/auth_recovery_page.dart';
 import 'package:whallet/src/auth/pages/auth_signin_page.dart';
 import 'package:whallet/src/auth/pages/auth_signup_page.dart';
 import 'package:whallet/src/init/pages/splashscreen_page.dart';
+import 'package:whallet/src/portifolio/pages/portfolio_home_page.dart';
 import 'package:whallet/utils/routes.dart';
 
 class AppWidget extends StatefulWidget {
@@ -16,12 +17,14 @@ class _AppWidgetState extends State<AppWidget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       theme: ThemeData.light().copyWith(),
       darkTheme: ThemeData.dark().copyWith(
         colorScheme: const ColorScheme.dark().copyWith(
           primary: const Color(0xff04E76F),
           secondary: const Color(0xff323238),
+          surface: const Color(0xffECECEC),
         ),
         scaffoldBackgroundColor: const Color(0xff202024),
         textTheme: const TextTheme(
@@ -93,6 +96,7 @@ class _AppWidgetState extends State<AppWidget> {
         AppRoute.AUTH_SIGNIN: (ctx) => const AuthSigninPage(),
         AppRoute.AUTH_SIGNUP: (ctx) => const AuthSighUpPage(),
         AppRoute.AUTH_RECOVERY: (ctx) => const AuthRecoveryPage(),
+        AppRoute.PORTFOLIO_HOME: (ctx) => const PortfolioHomePage(),
       },
     );
   }

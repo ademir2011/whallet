@@ -76,7 +76,7 @@ class _AuthSigninPageState extends State<AuthSigninPage> {
                 ElevatedButtonWidget(
                   title: 'Entrar',
                   isLoading: authSigninStore.isLoading,
-                  onPressed: authSigninStore.submit,
+                  onPressed: () => authSigninStore.submit(context),
                   rightIcon: Icon(
                     Icons.arrow_forward_rounded,
                     color: Theme.of(context).colorScheme.secondary,

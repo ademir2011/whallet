@@ -6,8 +6,12 @@ class AuthHeaderContainerWidget extends StatelessWidget {
   final String subtitle;
   final Size size;
   final Widget child;
+  final bool isExit;
+  final bool isOptions;
   const AuthHeaderContainerWidget({
     Key? key,
+    this.isExit = false,
+    this.isOptions = false,
     required this.title,
     required this.subtitle,
     required this.size,
@@ -18,33 +22,48 @@ class AuthHeaderContainerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            HeaderWidget(height: size.height * 0.125),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 35),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 50),
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleLarge,
+                  HeaderWidget(
+                    height: size.height * 0.125,
+                    isExit: isExit,
+                    isOptions: isOptions,
                   ),
-                  const SizedBox(height: 15),
-                  Text(
-                    subtitle,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  Container(
+                    height: size.height * 0.275,
+                    margin: const EdgeInsets.symmetric(horizontal: 35),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          title,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        const SizedBox(height: 15),
+                        Text(
+                          subtitle,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 50),
-                  child,
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 35),
+                      child: child,
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
