@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:whallet/src/portifolio/stores/cripto_store.dart';
 import 'package:whallet/src/portifolio/stores/portfolio_home_store.dart';
 import 'package:whallet/src/widgets/auth_header_container_widget.dart';
 import 'package:whallet/src/widgets/card_price_widget.dart';
-import 'package:whallet/src/widgets/cripto_label_percentage_widget.dart';
-import 'package:whallet/src/widgets/cripto_label_title_widget.dart';
+import 'package:whallet/src/widgets/cripto_dialog_widget.dart';
 
 class PortfolioHomePage extends StatefulWidget {
   const PortfolioHomePage({Key? key}) : super(key: key);
@@ -52,7 +52,19 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
                     itemBuilder: (ctx, index) {
                       if (portfolioHomeStore.tokens.length == index) {
                         return GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            final criptoStore = CriptoStore();
+                            showDialog(
+                              context: context,
+                              builder: (ctx) {
+                                return CriptoDialogWidget(
+                                  criptoStore: criptoStore,
+                                  title: 'Cadastrar Cripto',
+                                  subtitle: 'Digite o símbolo ou endereço da cripto para realizar a busca',
+                                );
+                              },
+                            );
+                          },
                           child: Container(
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.secondary,

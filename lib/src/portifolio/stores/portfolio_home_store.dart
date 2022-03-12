@@ -3,7 +3,7 @@ import 'package:whallet/src/portifolio/models/token_model.dart';
 
 class PortfolioHomeStore extends ChangeNotifier {
   late final List<TokenModel> tokens;
-  bool isLoading = false;
+  var isLoading = false;
 
   void toogleLoading() {
     isLoading = !isLoading;
