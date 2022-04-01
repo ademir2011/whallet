@@ -7,12 +7,16 @@ class TextFormFieldWidget extends StatelessWidget {
   final Icon? icon;
   final FocusNode focusNode;
   final bool isPassword;
+  final TextInputAction textInputAction;
+  final void Function(String)? onSubmitted;
 
   const TextFormFieldWidget({
     Key? key,
     required this.hintText,
     required this.focusNode,
     this.icon,
+    this.textInputAction = TextInputAction.next,
+    this.onSubmitted,
     this.isPassword = false,
     required this.controller,
     required this.validator,
@@ -22,9 +26,12 @@ class TextFormFieldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      autofocus: true,
       validator: validator,
       focusNode: focusNode,
       obscureText: isPassword,
+      textInputAction: textInputAction,
+      onFieldSubmitted: onSubmitted ?? (_) {},
       decoration: InputDecoration(
         fillColor: Theme.of(context).cardColor,
         filled: true,
@@ -35,7 +42,7 @@ class TextFormFieldWidget extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
           borderSide: BorderSide(
-            color: focusNode.hasFocus ? Theme.of(context).colorScheme.primary : Colors.transparent,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
         errorBorder: OutlineInputBorder(
@@ -47,7 +54,7 @@ class TextFormFieldWidget extends StatelessWidget {
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
           borderSide: BorderSide(
-            color: focusNode.hasFocus ? Theme.of(context).errorColor : Colors.transparent,
+            color: Theme.of(context).errorColor,
           ),
         ),
         border: OutlineInputBorder(

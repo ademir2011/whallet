@@ -12,9 +12,13 @@ class UserModel {
     required this.email,
     required this.uid,
     required this.docRef,
-  })  : assert(password.length >= 6, 'Senha muito pequena.'),
-        assert(login.length >= 6 && login.length < 50, 'Login muito pequeno ou grande.'),
-        assert(email.contains(RegExp(r'[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+')), 'E-mail diferente.');
+  });
+
+  // : assert(password.length >= 6, 'Senha muito pequena.'),
+  //       assert(login.length >= 6 && login.length < 50, 'Login muito pequeno ou grande.'),
+  //       assert(email.contains(RegExp(r'[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+')), 'E-mail diferente.')
+
+  factory UserModel.empty() => UserModel(login: '', password: '', email: '', uid: '', docRef: '');
 
   UserModel copyWith({
     String? login,

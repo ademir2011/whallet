@@ -11,7 +11,7 @@ class CoingeckoDatasource {
 
     final tokens = responseTokens.data as List;
     final tokensFilter = tokens.where((element) => element['symbol'] == tokenModel.symbol).toList();
-    return tokensFilter.map((token) => TokenModel(symbol: token['symbol'], address: '', name: token['name'])).toList();
+    return tokensFilter.map((token) => TokenModel(symbol: token['symbol'], name: token['name'])).toList();
   }
 
   TokenModel? getTokenByList({required List<TokenModel> tokens, required String tokenId}) {
