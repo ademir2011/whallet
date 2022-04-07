@@ -1,16 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whallet/src/auth/bloc/auth_event.dart';
 import 'package:whallet/src/auth/bloc/auth_state.dart';
 import 'package:whallet/src/auth/enums/type_auth_enum.dart';
 import 'package:whallet/src/auth/models/user_model.dart';
-import 'package:whallet/src/auth/services/auth_service.dart';
+import 'package:whallet/src/auth/repositories/auth_repository.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthService authService;
+  final AuthRepository authRepository;
 
   AuthBloc({
-    required this.authService,
+    required this.authRepository,
   }) : super(AuthInitialState()) {
     on<AuthSignInEvent>(_signIn);
     on<AuthSignUpEvent>(_signUp);
@@ -20,20 +19,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   _signIn(AuthSignInEvent event, emit) async {
     emit(LoadingAuthState());
     try {
-      // await authService.signIn(userModel: event.userModel, typeAuthEnum: TypeAuthEnum.emailPassword);
-      await Future.delayed(const Duration(seconds: 3));
-      emit(SucessAuthState());
+      final userModel = UserModel.empty().copyWith(email: event.email, password: event.password);
+      await authRepository.signIn(userModel: userModel, typeAuthEnum: TypeAuthEnum.emailPassword);
+      emit(SuccessAuthState());
     } catch (e) {
-      emit(ErrorAuthState());
+      emit(ErrorAuthState(message: 'Falha na autenticação.'));
     }
   }
 
   Future<void> _signUp(AuthSignUpEvent event, emit) async {
     emit(LoadingAuthState());
     try {
-      await authService.signUp(userModel: event.userModel, typeAuthEnum: TypeAuthEnum.emailPassword);
+      if (event.password != event.confirmPassword) {
+        emit(ErrorAuthState(message: 'Senha difere da confirmação da senha'));
+      }
+      final userModel = UserModel.empty().copyWith(email: event.email, password: event.password);
+      await authRepository.signUp(userModel: userModel, typeAuthEnum: TypeAuthEnum.emailPassword);
+      emit(SuccessAuthState());
     } catch (e) {
-      emit(ErrorAuthState());
+      emit(ErrorAuthState(message: 'Houve um erro ao cadastrar ${e.toString()}'));
     }
   }
 

@@ -13,6 +13,9 @@ class AuthRepository {
       } else if (typeAuthEnum == TypeAuthEnum.google) {
       } else if (typeAuthEnum == TypeAuthEnum.facebook) {
       } else if (typeAuthEnum == TypeAuthEnum.twitter) {}
+    } else {
+      FirebaseAuth.instance.signOut();
+      return Future.error(Exception('Possivelmente você realizou um cadastro recentemente.'));
     }
     return Future.error(Exception);
   }

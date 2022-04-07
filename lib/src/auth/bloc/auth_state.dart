@@ -1,15 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:whallet/src/auth/models/user_model.dart';
-
 abstract class AuthState {}
 
-class AuthInitialState extends AuthState {
-  final UserModel userModel;
-  AuthInitialState({required this.userModel});
-}
+class AuthInitialState extends AuthState {}
 
-class ErrorAuthState extends AuthState {}
+class ErrorAuthState extends AuthState {
+  final String message;
+  ErrorAuthState({required this.message});
+}
 
 class LoadingAuthState extends AuthState {}
 
-class SucessAuthState extends AuthState {}
+class SuccessAuthState extends AuthState {}

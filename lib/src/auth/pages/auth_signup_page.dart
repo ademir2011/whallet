@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whallet/src/auth/bloc/auth_bloc.dart';
+import 'package:whallet/src/auth/bloc/auth_event.dart';
 import 'package:whallet/src/auth/bloc/auth_state.dart';
-import 'package:whallet/src/auth/services/auth_service.dart';
+import 'package:whallet/src/auth/repositories/auth_repository.dart';
 import 'package:whallet/src/widgets/auth_footer_widget.dart';
 import 'package:whallet/src/widgets/auth_header_container_widget.dart';
 import 'package:whallet/src/widgets/textformfield_widget.dart';
@@ -18,7 +19,7 @@ class AuthSighUpPage extends StatefulWidget {
 
 class _AuthSighUpPageState extends State<AuthSighUpPage> {
   final authBloc = AuthBloc(
-    authService: AuthService(),
+    authRepository: AuthRepository(),
   );
 
   final emailController = TextEditingController();
@@ -84,10 +85,21 @@ class _AuthSighUpPageState extends State<AuthSighUpPage> {
                   isPassword: true,
                 ),
                 const SizedBox(height: 75),
+                if (state is ErrorAuthState) Text(state.message),
                 AuthFooterWidget(
                   isLoading: state is LoadingAuthState,
-                  title: 'Cadastrar',
-                  onPressed: () {},
+                  title: (state is SuccessAuthState) ? 'Cadastrado' : 'Cadastrar',
+                  onPressed: () {
+                    if (state is! SuccessAuthState && formKey.currentState!.validate()) {
+                      authBloc.add(
+                        AuthSignUpEvent(
+                          email: emailController.text,
+                          password: passwordController.text,
+                          confirmPassword: confirmPasswordController.text,
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             ),

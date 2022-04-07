@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 class UserModel {
-  final String login;
   final String password;
   final String email;
   final String uid;
   final String docRef;
   UserModel({
-    required this.login,
     required this.password,
     required this.email,
     required this.uid,
@@ -18,17 +16,15 @@ class UserModel {
   //       assert(login.length >= 6 && login.length < 50, 'Login muito pequeno ou grande.'),
   //       assert(email.contains(RegExp(r'[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+')), 'E-mail diferente.')
 
-  factory UserModel.empty() => UserModel(login: '', password: '', email: '', uid: '', docRef: '');
+  factory UserModel.empty() => UserModel(password: '', email: '', uid: '', docRef: '');
 
   UserModel copyWith({
-    String? login,
     String? password,
     String? email,
     String? uid,
     String? docRef,
   }) {
     return UserModel(
-      login: login ?? this.login,
       password: password ?? this.password,
       email: email ?? this.email,
       uid: uid ?? this.uid,
@@ -38,7 +34,6 @@ class UserModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'login': login,
       'password': password,
       'email': email,
       'uid': uid,
@@ -48,7 +43,6 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      login: map['login'] ?? '',
       password: map['password'] ?? '',
       email: map['email'] ?? '',
       uid: map['uid'] ?? '',
@@ -62,7 +56,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(login: $login, password: $password, email: $email, uid: $uid, docRef: $docRef)';
+    return 'UserModel(password: $password, email: $email, uid: $uid, docRef: $docRef)';
   }
 
   @override
@@ -70,7 +64,6 @@ class UserModel {
     if (identical(this, other)) return true;
 
     return other is UserModel &&
-        other.login == login &&
         other.password == password &&
         other.email == email &&
         other.uid == uid &&
@@ -79,6 +72,6 @@ class UserModel {
 
   @override
   int get hashCode {
-    return login.hashCode ^ password.hashCode ^ email.hashCode ^ uid.hashCode ^ docRef.hashCode;
+    return password.hashCode ^ email.hashCode ^ uid.hashCode ^ docRef.hashCode;
   }
 }

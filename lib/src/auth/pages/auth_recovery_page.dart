@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whallet/src/auth/bloc/auth_bloc.dart';
 import 'package:whallet/src/auth/bloc/auth_state.dart';
-import 'package:whallet/src/auth/services/auth_service.dart';
+import 'package:whallet/src/auth/repositories/auth_repository.dart';
 import 'package:whallet/src/widgets/auth_footer_widget.dart';
 import 'package:whallet/src/widgets/auth_header_container_widget.dart';
 import 'package:whallet/src/widgets/textformfield_widget.dart';
@@ -18,7 +18,7 @@ class AuthRecoveryPage extends StatefulWidget {
 
 class _AuthRecoveryPageState extends State<AuthRecoveryPage> {
   final authBloc = AuthBloc(
-    authService: AuthService(),
+    authRepository: AuthRepository(),
   );
 
   final emailController = TextEditingController();

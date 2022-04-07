@@ -13,7 +13,8 @@ class PortfolioBloc extends Bloc<PortfolioEvent, PortfolioState> {
   Future<void> _fetchTokensPortfolioEvent(event, emit) async {
     emit(LoadingPortfolioState());
     final tokens = await portfolioService.getTokensByUser(
-        userModel: UserModel(login: 'login', password: 'password', email: 'email', uid: 'uid', docRef: 'docRef'));
+      userModel: UserModel.empty(),
+    );
 
     emit(SuccessPortfolioState(tokens: tokens));
   }

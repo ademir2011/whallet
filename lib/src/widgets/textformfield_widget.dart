@@ -26,7 +26,6 @@ class TextFormFieldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      autofocus: true,
       validator: validator,
       focusNode: focusNode,
       obscureText: isPassword,
