@@ -1,12 +1,14 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whallet/src/auth/bloc/auth_bloc.dart';
 import 'package:whallet/src/auth/bloc/auth_state.dart';
+import 'package:whallet/src/auth/datasources/firebase_auth_email_password_datasource.dart';
 import 'package:whallet/src/auth/repositories/auth_repository.dart';
 import 'package:whallet/src/widgets/auth_footer_widget.dart';
-import 'package:whallet/src/widgets/auth_header_container_widget.dart';
+import 'package:whallet/src/widgets/template_container_widget.dart';
 import 'package:whallet/src/widgets/textformfield_widget.dart';
 
 class AuthRecoveryPage extends StatefulWidget {
@@ -18,7 +20,9 @@ class AuthRecoveryPage extends StatefulWidget {
 
 class _AuthRecoveryPageState extends State<AuthRecoveryPage> {
   final authBloc = AuthBloc(
-    authRepository: AuthRepository(),
+    authRepository: AuthRepository(
+      firebaseAuthEmailPasswordDatasource: FirebaseAuthEmailPasswordDatasource(firebaseAuth: FirebaseAuth.instance),
+    ),
   );
 
   final emailController = TextEditingController();
@@ -35,7 +39,7 @@ class _AuthRecoveryPageState extends State<AuthRecoveryPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return AuthHeaderContainerWidget(
+    return TemplateContainerWidget(
       title: 'Recuperar senha',
       subtitle: 'Será enviado um e-mail para você redefinir sua senha. Informe o e-mail cadastrado',
       size: size,

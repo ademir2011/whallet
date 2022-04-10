@@ -1,13 +1,17 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whallet/src/portifolio/bloc_portfolio/portfolio_bloc.dart';
 import 'package:whallet/src/portifolio/bloc_portfolio/portfolio_event.dart';
 import 'package:whallet/src/portifolio/bloc_portfolio/portfolio_state.dart';
+import 'package:whallet/src/portifolio/datasources/coingecko_datasource.dart';
+import 'package:whallet/src/portifolio/datasources/pancakeswap_datasource.dart';
 import 'package:whallet/src/portifolio/repository/portfolio_repository.dart';
-import 'package:whallet/src/portifolio/services/portfolio_service.dart';
-import 'package:whallet/src/widgets/auth_header_container_widget.dart';
+import 'package:whallet/src/portifolio/repository/token_repository.dart';
+import 'package:whallet/src/widgets/template_container_widget.dart';
 import 'package:whallet/src/widgets/card_price_widget.dart';
 import 'package:whallet/src/widgets/cripto_dialog_widget.dart';
 
@@ -19,29 +23,32 @@ class PortfolioHomePage extends StatefulWidget {
 }
 
 class _PortfolioHomePageState extends State<PortfolioHomePage> {
-  final portfolioBloc = PortfolioBloc(PortfolioService(PortfolioRepository()));
-  late StreamSubscription sub;
+  final portfolioBloc = PortfolioBloc(
+    PortfolioRepository(
+      firebaseFirestore: FirebaseFirestore.instance,
+      dio: Dio(),
+      tokenRepository: TokenRepository(
+        dio: Dio(),
+        coingeckoDatasource: CoingeckoDatasource(),
+        firebaseFirestore: FirebaseFirestore.instance,
+        pancakeswapDatasource: PancakeswapDatasource(),
+      ),
+    ),
+  );
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      sub = portfolioBloc.stream.listen((event) => setState(() => {}));
       portfolioBloc.add(FetchTokensPortfolioEvent());
     });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    sub.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return AuthHeaderContainerWidget(
+    return TemplateContainerWidget(
       title: 'Criptomoedas',
       subtitle: 'Cadastre suas criptomoedas',
       size: size,
@@ -87,7 +94,7 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
                                   subtitle: 'Digite o símbolo ou endereço da cripto para realizar a busca',
                                 );
                               },
-                            );
+                            ).then((value) => portfolioBloc.add(FetchTokensPortfolioEvent()));
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -107,6 +114,8 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
                       return CardPriceWidget(
                         price: state.tokens[index].usdPrice ?? .0,
                         tokenTitle: state.tokens[index].name ?? '',
+                        percentage:
+                            100 - ((state.tokens[index].last24price ?? 0) * 100) / (state.tokens[index].usdPrice ?? 1),
                       );
                     },
                   );

@@ -36,9 +36,10 @@ class CriptoLabelTitleWidget extends StatelessWidget {
       child: Center(
         child: Text(
           title,
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
                 fontWeight: FontWeight.w800,
               ),
+          textAlign: TextAlign.center,
         ),
       ),
     );

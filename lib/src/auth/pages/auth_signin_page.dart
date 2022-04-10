@@ -1,13 +1,16 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whallet/src/auth/bloc/auth_bloc.dart';
 import 'package:whallet/src/auth/bloc/auth_event.dart';
 import 'package:whallet/src/auth/bloc/auth_state.dart';
+import 'package:whallet/src/auth/datasources/firebase_auth_email_password_datasource.dart';
 import 'package:whallet/src/auth/repositories/auth_repository.dart';
-import 'package:whallet/src/widgets/auth_header_container_widget.dart';
+import 'package:whallet/src/widgets/template_container_widget.dart';
 import 'package:whallet/src/widgets/elevated_button_widget.dart';
 import 'package:whallet/src/widgets/textformfield_widget.dart';
 import 'package:whallet/utils/routes.dart';
@@ -20,7 +23,11 @@ class AuthSigninPage extends StatefulWidget {
 }
 
 class _AuthSigninPageState extends State<AuthSigninPage> {
-  final authBloc = AuthBloc(authRepository: AuthRepository());
+  final authBloc = AuthBloc(
+    authRepository: AuthRepository(
+      firebaseAuthEmailPasswordDatasource: FirebaseAuthEmailPasswordDatasource(firebaseAuth: FirebaseAuth.instance),
+    ),
+  );
   final formKey = GlobalKey<FormState>();
 
   final emailController = TextEditingController();
@@ -28,6 +35,16 @@ class _AuthSigninPageState extends State<AuthSigninPage> {
 
   final emailFocus = FocusNode();
   final passwordFocus = FocusNode();
+  var hasCredentialData = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      authBloc.add(CheckDataCredentialEvent());
+    });
+  }
 
   @override
   void dispose() {
@@ -44,7 +61,7 @@ class _AuthSigninPageState extends State<AuthSigninPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return AuthHeaderContainerWidget(
+    return TemplateContainerWidget(
       title: 'Autenticação',
       subtitle: 'Faça login com seu e-mail e senha ou entre com sua rede social',
       size: size,
@@ -60,108 +77,133 @@ class _AuthSigninPageState extends State<AuthSigninPage> {
               return const Center(child: CircularProgressIndicator());
             }
 
-            if (state is AuthInitialState) {
-              return Form(
-                key: formKey,
-                child: Column(
-                  children: [
-                    TextFormFieldWidget(
-                      hintText: 'E-mail',
-                      icon: const Icon(Icons.email),
-                      focusNode: emailFocus,
-                      controller: emailController,
-                      validator: (v) => (v ?? '').isEmpty ? 'Vazio' : null,
-                    ),
-                    const SizedBox(height: 15),
-                    TextFormFieldWidget(
-                      hintText: 'Senha',
-                      icon: const Icon(Icons.password),
-                      focusNode: passwordFocus,
-                      controller: passwordController,
-                      isPassword: true,
-                      validator: (v) => (v ?? '').isEmpty ? 'Vazio' : null,
-                    ),
-                    const SizedBox(height: 25),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () => Navigator.pushNamed(
-                            context,
-                            AppRoute.AUTH_RECOVERY,
-                          ),
-                          child: Text(
-                            'Esqueceu sua senha?',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
+            if (state is SuccessCredentialAuthState) {
+              if (state.email.isNotEmpty && state.password.isNotEmpty) {
+                emailController.text = state.email;
+                passwordController.text = state.password;
+              }
+              hasCredentialData = state.checkDataCredential;
+            }
+
+            return Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormFieldWidget(
+                    hintText: 'E-mail',
+                    icon: const Icon(Icons.email),
+                    focusNode: emailFocus,
+                    controller: emailController,
+                    validator: (v) => (v ?? '').isEmpty ? 'Vazio' : null,
+                  ),
+                  const SizedBox(height: 15),
+                  TextFormFieldWidget(
+                    hintText: 'Senha',
+                    icon: const Icon(Icons.password),
+                    focusNode: passwordFocus,
+                    controller: passwordController,
+                    isPassword: true,
+                    validator: (v) => (v ?? '').isEmpty ? 'Vazio' : null,
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      if (state is LoadingCheckCredentialAuthState)
+                        const Padding(
+                          padding: EdgeInsets.all(15),
+                          child: SizedBox(height: 15, width: 15, child: CircularProgressIndicator()),
                         ),
-                        ElevatedButtonWidget(
-                          title: 'Entrar',
-                          isLoading: state is LoadingAuthState ? true : false,
-                          onPressed: () {
-                            if (formKey.currentState!.validate()) {
+                      if (state is! LoadingCheckCredentialAuthState)
+                        Checkbox(
+                          value: hasCredentialData,
+                          onChanged: (value) {
+                            if (value ?? false) {
                               authBloc.add(
-                                AuthSignInEvent(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                ),
+                                AuthSaveCredentialEvent(email: emailController.text, password: passwordController.text),
+                              );
+                            } else {
+                              authBloc.add(
+                                AuthRemoveCredentialEvent(),
                               );
                             }
                           },
-                          rightIcon: Icon(
-                            Icons.arrow_forward_rounded,
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
                         ),
-                      ],
-                    ),
-                    if (state is ErrorAuthState) const SizedBox(height: 50),
-                    if (state is ErrorAuthState)
                       Text(
-                        'Ocorreu um erro. Por favor, tente novamente.',
-                        style: TextStyle(
-                          color: Theme.of(context).errorColor,
+                        'Salvar dados de acesso',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pushNamed(
+                          context,
+                          AppRoute.AUTH_RECOVERY,
+                        ),
+                        child: Text(
+                          'Esqueceu sua senha?',
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
-                    const SizedBox(height: 50),
-                    SizedBox(
-                      width: double.infinity,
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          text: 'Não quer entrar por redes sociais?\n',
-                          style: Theme.of(context).textTheme.bodySmall,
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'CADASTRE-SE AQUI',
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () => Navigator.pushNamed(
-                                      context,
-                                      AppRoute.AUTH_SIGNUP,
-                                    ),
-                            ),
-                            TextSpan(
-                              text: ' com e-mail e senha!',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
+                      ElevatedButtonWidget(
+                        title: 'Entrar',
+                        isLoading: state is LoadingAuthState ? true : false,
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            authBloc.add(
+                              AuthSignInEvent(
+                                email: emailController.text,
+                                password: passwordController.text,
+                              ),
+                            );
+                          }
+                        },
+                        rightIcon: Icon(
+                          Icons.arrow_forward_rounded,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
+                      ),
+                    ],
+                  ),
+                  if (state is ErrorAuthState) const SizedBox(height: 50),
+                  if (state is ErrorAuthState)
+                    Text(
+                      'Ocorreu um erro. Por favor, tente novamente.',
+                      style: TextStyle(
+                        color: Theme.of(context).errorColor,
                       ),
                     ),
-                  ],
-                ),
-              );
-            }
-
-            if (state is ErrorAuthState) {
-              return const Center(
-                child: Text('Erro'),
-              );
-            }
-
-            return const Center(
-              child: Text('Erro'),
+                  const SizedBox(height: 50),
+                  SizedBox(
+                    width: double.infinity,
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        text: 'Não quer entrar por redes sociais?\n',
+                        style: Theme.of(context).textTheme.bodySmall,
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'CADASTRE-SE AQUI',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => Navigator.pushNamed(
+                                    context,
+                                    AppRoute.AUTH_SIGNUP,
+                                  ),
+                          ),
+                          TextSpan(
+                            text: ' com e-mail e senha!',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),

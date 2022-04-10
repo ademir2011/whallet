@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:whallet/src/portifolio/models/token_model.dart';
 
 abstract class TokenState {}
@@ -12,8 +11,17 @@ class ErrorTokenState extends TokenState {
   ErrorTokenState({required this.message});
 }
 
+class SuccessSelectTokenState extends TokenState {
+  final List<TokenModel> tokens;
+  TokenModel selectedToken;
+
+  SuccessSelectTokenState({this.tokens = const [], required this.selectedToken});
+}
+
 class SuccessTokenState extends TokenState {
   final List<TokenModel> tokens;
 
   SuccessTokenState({this.tokens = const []});
 }
+
+class SuccessTokenSaveState extends TokenState {}

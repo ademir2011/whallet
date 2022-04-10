@@ -4,6 +4,7 @@ import 'package:whallet/src/auth/pages/auth_signin_page.dart';
 import 'package:whallet/src/auth/pages/auth_signup_page.dart';
 import 'package:whallet/src/init/pages/splashscreen_page.dart';
 import 'package:whallet/src/portifolio/pages/portfolio_home_page.dart';
+import 'package:whallet/src/portifolio/pages/token_detail_page.dart';
 import 'package:whallet/utils/routes.dart';
 
 class AppWidget extends StatefulWidget {
@@ -97,6 +98,7 @@ class _AppWidgetState extends State<AppWidget> {
         AppRoute.AUTH_SIGNUP: (ctx) => const AuthSighUpPage(),
         AppRoute.AUTH_RECOVERY: (ctx) => const AuthRecoveryPage(),
         AppRoute.PORTFOLIO_HOME: (ctx) => const PortfolioHomePage(),
+        AppRoute.TOKEN_DETAIL: (ctx) => const TokenDetailPage(),
       },
     );
   }

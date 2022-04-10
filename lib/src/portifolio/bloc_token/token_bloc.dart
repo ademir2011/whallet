@@ -1,24 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whallet/src/portifolio/bloc_token/token_event.dart';
 import 'package:whallet/src/portifolio/bloc_token/token_state.dart';
-import 'package:whallet/src/portifolio/models/token_model.dart';
-import 'package:whallet/src/portifolio/services/token_service.dart';
+import 'package:whallet/src/portifolio/repository/token_repository.dart';
 
 class TokenBloc extends Bloc<TokenEvent, TokenState> {
-  final TokenService tokenService;
-
-  final GlobalKey<FormState> formKey;
-  final TextEditingController tokenController;
-  final FocusNode tokenFocus;
-  TokenModel selectedToken;
+  final TokenRepository tokenRepository;
 
   TokenBloc({
-    required this.tokenService,
-    required this.formKey,
-    required this.tokenController,
-    required this.tokenFocus,
-    required this.selectedToken,
+    required this.tokenRepository,
   }) : super(InitialTokenState()) {
     on<FetchTokensEvent>(_fetchTokensEvent);
     on<CreateTokenEvent>(_createTokenEvent);
@@ -28,7 +17,7 @@ class TokenBloc extends Bloc<TokenEvent, TokenState> {
   Future<void> _fetchTokensEvent(FetchTokensEvent event, emit) async {
     emit(LoadingTokenState());
     try {
-      final tokens = await tokenService.getTokensByInfo(tokenModel: event.tokenModel);
+      final tokens = await tokenRepository.getTokensByInfo(tokenModel: event.tokenModel);
       emit(SuccessTokenState(tokens: tokens));
     } catch (e) {
       emit(ErrorTokenState(message: 'Não foi possível carregar os tokens.'));
@@ -38,13 +27,18 @@ class TokenBloc extends Bloc<TokenEvent, TokenState> {
   Future<void> _createTokenEvent(CreateTokenEvent event, emit) async {
     emit(LoadingTokenState());
     if ((event.tokenModel.symbol ?? '') == '') {
-      emit(ErrorTokenState(message: 'Não foi possível adicioanr o token'));
+      emit(ErrorTokenState(message: 'Não foi possível adicionar o token'));
     } else {
-      emit(SuccessTokenState());
+      try {
+        tokenRepository.saveToken(tokenModel: event.tokenModel);
+        emit(SuccessTokenSaveState());
+      } catch (e) {
+        emit(ErrorTokenState(message: e.toString()));
+      }
     }
   }
 
   void _selectTokenEvent(SelectTokenEvent event, emit) {
-    emit(SuccessTokenState(tokens: event.tokens));
+    emit(SuccessSelectTokenState(tokens: event.tokens, selectedToken: event.selectedToken));
   }
 }

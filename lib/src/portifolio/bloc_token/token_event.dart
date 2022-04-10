@@ -14,8 +14,9 @@ class CreateTokenEvent extends TokenEvent {
 
 class SelectTokenEvent extends TokenEvent {
   final List<TokenModel> tokens;
+  TokenModel selectedToken;
 
-  SelectTokenEvent({required this.tokens});
+  SelectTokenEvent({required this.tokens, required this.selectedToken});
 }
 
 class UpdateTokenEvent extends TokenEvent {}

@@ -5,10 +5,12 @@ import 'package:whallet/src/widgets/cripto_label_title_widget.dart';
 class CardPriceWidget extends StatelessWidget {
   final String tokenTitle;
   final double price;
+  final double percentage;
   const CardPriceWidget({
     Key? key,
     required this.tokenTitle,
     required this.price,
+    required this.percentage,
   }) : super(key: key);
 
   @override
@@ -39,8 +41,8 @@ class CardPriceWidget extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: CriptoLabelPercentageWidget(
-              value: 0.0,
-              isPositive: true,
+              value: percentage,
+              isPositive: percentage >= 0,
               height: 37.5,
               width: 70,
             ),

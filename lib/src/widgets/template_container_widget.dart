@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:whallet/src/widgets/header_widget.dart';
 
-class AuthHeaderContainerWidget extends StatelessWidget {
-  final String title;
-  final String subtitle;
+class TemplateContainerWidget extends StatelessWidget {
+  final String? title;
+  final String? subtitle;
   final Size size;
   final Widget child;
   final bool isExit;
   final bool isOptions;
-  const AuthHeaderContainerWidget({
+  const TemplateContainerWidget({
     Key? key,
     this.isExit = false,
     this.isOptions = false,
-    required this.title,
-    required this.subtitle,
+    this.title,
+    this.subtitle,
     required this.size,
     required this.child,
   }) : super(key: key);
@@ -34,25 +34,26 @@ class AuthHeaderContainerWidget extends StatelessWidget {
                     isExit: isExit,
                     isOptions: isOptions,
                   ),
-                  Container(
-                    height: size.height * 0.275,
-                    margin: const EdgeInsets.symmetric(horizontal: 35),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          title,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: 15),
-                        Text(
-                          subtitle,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
+                  if (title != null && subtitle != null)
+                    Container(
+                      height: size.height * 0.275,
+                      margin: const EdgeInsets.symmetric(horizontal: 35),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            title!,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: 15),
+                          Text(
+                            subtitle!,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                   SizedBox(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 35),

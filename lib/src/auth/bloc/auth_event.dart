@@ -1,5 +1,3 @@
-import 'package:whallet/src/auth/models/user_model.dart';
-
 abstract class AuthEvent {}
 
 class AuthSignInEvent extends AuthEvent {
@@ -7,6 +5,16 @@ class AuthSignInEvent extends AuthEvent {
   final String password;
 
   AuthSignInEvent({required this.email, required this.password});
+}
+
+class CheckDataCredentialEvent extends AuthEvent {}
+
+class AuthRemoveCredentialEvent extends AuthEvent {}
+
+class AuthSaveCredentialEvent extends AuthEvent {
+  final String email;
+  final String password;
+  AuthSaveCredentialEvent({required this.email, required this.password});
 }
 
 class AuthSignUpEvent extends AuthEvent {

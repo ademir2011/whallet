@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whallet/src/auth/bloc/auth_event.dart';
 import 'package:whallet/src/auth/bloc/auth_state.dart';
 import 'package:whallet/src/auth/enums/type_auth_enum.dart';
@@ -14,6 +16,43 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignInEvent>(_signIn);
     on<AuthSignUpEvent>(_signUp);
     on<AuthSignOutEvent>(_signOut);
+    on<AuthSaveCredentialEvent>(_authSaveCredentialEvent);
+    on<AuthRemoveCredentialEvent>(_authRemoveCredentialEvent);
+    on<CheckDataCredentialEvent>(_checkDataCredentialEvent);
+  }
+
+  Future<void> _authSaveCredentialEvent(AuthSaveCredentialEvent event, emit) async {
+    emit(LoadingCheckCredentialAuthState());
+    final prefs = await SharedPreferences.getInstance();
+    if (event.email.isNotEmpty && event.password.isNotEmpty) {
+      await prefs.setString('email', event.email);
+      await prefs.setString('password', event.password);
+    }
+    emit(SuccessCredentialAuthState(checkDataCredential: true));
+  }
+
+  Future<void> _authRemoveCredentialEvent(event, emit) async {
+    emit(LoadingCheckCredentialAuthState());
+    final prefs = await SharedPreferences.getInstance();
+    final emailRemoved = await prefs.remove('email');
+    final passwordRemoved = await prefs.remove('password');
+    if (emailRemoved && passwordRemoved) {
+      emit(SuccessCredentialAuthState());
+    } else {
+      emit(ErrorAuthState(message: 'Não foi possível remover dados'));
+    }
+  }
+
+  Future<void> _checkDataCredentialEvent(event, emit) async {
+    emit(LoadingCheckCredentialAuthState());
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email');
+    final password = prefs.getString('password');
+    if (email != null && password != null) {
+      emit(SuccessCredentialAuthState(checkDataCredential: true, email: email, password: password));
+    } else {
+      emit(SuccessCredentialAuthState(checkDataCredential: false));
+    }
   }
 
   _signIn(AuthSignInEvent event, emit) async {
@@ -41,5 +80,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  _signOut(event, emit) {}
+  _signOut(event, emit) {
+    emit(LoadingAuthState());
+    try {
+      authRepository.logout(typeAuthEnum: TypeAuthEnum.emailPassword);
+      emit(SuccessAuthState());
+    } catch (e) {
+      emit(ErrorAuthState(message: 'Erro ao deslogar'));
+    }
+  }
 }

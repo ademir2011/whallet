@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:whallet/src/auth/bloc/auth_bloc.dart';
 import 'package:whallet/src/portifolio/bloc_token/token_bloc.dart';
 import 'package:whallet/src/portifolio/bloc_token/token_event.dart';
 import 'package:whallet/src/portifolio/bloc_token/token_state.dart';
@@ -10,7 +11,6 @@ import 'package:whallet/src/portifolio/datasources/coingecko_datasource.dart';
 import 'package:whallet/src/portifolio/datasources/pancakeswap_datasource.dart';
 import 'package:whallet/src/portifolio/models/token_model.dart';
 import 'package:whallet/src/portifolio/repository/token_repository.dart';
-import 'package:whallet/src/portifolio/services/token_service.dart';
 import 'package:whallet/src/widgets/elevated_button_widget.dart';
 import 'package:whallet/src/widgets/label_symbol_dialog_widget.dart';
 import 'package:whallet/src/widgets/outlined_button_widget.dart';
@@ -31,19 +31,24 @@ class CriptoDialogWidget extends StatefulWidget {
 }
 
 class _CriptoDialogWidgetState extends State<CriptoDialogWidget> {
+  final formKey = GlobalKey<FormState>();
+  var selectedToken = TokenModel();
+  final tokenController = TextEditingController();
+  final tokenFocus = FocusNode();
   final tokenBloc = TokenBloc(
-    tokenService: TokenService(TokenRepository(CoingeckoDatasource(), PancakeswapDatasource())),
-    formKey: GlobalKey<FormState>(),
-    selectedToken: TokenModel(),
-    tokenController: TextEditingController(),
-    tokenFocus: FocusNode(),
+    tokenRepository: TokenRepository(
+      coingeckoDatasource: CoingeckoDatasource(),
+      pancakeswapDatasource: PancakeswapDatasource(),
+      firebaseFirestore: FirebaseFirestore.instance,
+      dio: Dio(),
+    ),
   );
   late StreamSubscription sub;
 
   @override
   void dispose() {
-    tokenBloc.tokenController.dispose();
-    tokenBloc.tokenFocus.dispose();
+    tokenController.dispose();
+    tokenFocus.dispose();
     super.dispose();
   }
 
@@ -61,8 +66,12 @@ class _CriptoDialogWidgetState extends State<CriptoDialogWidget> {
         child: BlocBuilder<TokenBloc, TokenState>(
           bloc: tokenBloc,
           builder: (context, state) {
+            if (state is SuccessSelectTokenState) {
+              selectedToken = state.selectedToken;
+            }
+
             return Form(
-              key: tokenBloc.formKey,
+              key: formKey,
               child: Column(
                 children: [
                   Text(
@@ -74,8 +83,8 @@ class _CriptoDialogWidgetState extends State<CriptoDialogWidget> {
                     hintText: 'Buscar Cripto',
                     icon: const Icon(Icons.abc),
                     validator: (_) {},
-                    controller: tokenBloc.tokenController,
-                    focusNode: tokenBloc.tokenFocus,
+                    controller: tokenController,
+                    focusNode: tokenFocus,
                     textInputAction: TextInputAction.search,
                     onSubmitted: (value) {
                       tokenBloc.add(FetchTokensEvent(tokenModel: TokenModel(symbol: value)));
@@ -83,32 +92,18 @@ class _CriptoDialogWidgetState extends State<CriptoDialogWidget> {
                   ),
                   const SizedBox(height: 10),
                   if (state is LoadingTokenState) const Center(child: CircularProgressIndicator()),
-                  if (state is SuccessTokenState)
+                  if (state is SuccessTokenSaveState)
+                    const Center(
+                      child: Text('Token adicionado com sucesso.'),
+                    ),
+                  if (state is SuccessTokenState || state is SuccessSelectTokenState)
                     SizedBox(
                       height: 200,
                       width: MediaQuery.of(context).size.width,
-                      child: GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 15,
-                          childAspectRatio: 4 / 2,
-                        ),
-                        itemCount: state.tokens.length,
-                        itemBuilder: (context, index) {
-                          print(tokenBloc.selectedToken);
-                          return LabelSymbolDialogWidget(
-                            symbleName: state.tokens[index].symbol ?? '',
-                            selected: tokenBloc.selectedToken == state.tokens[index],
-                            onTap: () {
-                              tokenBloc.selectedToken = tokenBloc.selectedToken.symbol == state.tokens[index].symbol
-                                  ? TokenModel()
-                                  : state.tokens[index];
-
-                              tokenBloc.add(SelectTokenEvent(tokens: state.tokens));
-                            },
-                          );
-                        },
+                      child: GridTokensWidget(
+                        state: state,
+                        tokenBloc: tokenBloc,
+                        selectedToken: selectedToken,
                       ),
                     ),
                   const SizedBox(height: 10),
@@ -126,7 +121,7 @@ class _CriptoDialogWidgetState extends State<CriptoDialogWidget> {
                     children: [
                       OutlineButtonWidget(onPressed: () => Navigator.of(context).pop(), title: 'Fechar'),
                       ElevatedButtonWidget(
-                        onPressed: () => tokenBloc.add(CreateTokenEvent(tokenModel: tokenBloc.selectedToken)),
+                        onPressed: () => tokenBloc.add(CreateTokenEvent(tokenModel: selectedToken)),
                         title: 'Adicionar',
                       ),
                     ],
@@ -137,6 +132,43 @@ class _CriptoDialogWidgetState extends State<CriptoDialogWidget> {
           },
         ),
       ),
+    );
+  }
+}
+
+class GridTokensWidget extends StatelessWidget {
+  final dynamic state;
+  TokenModel selectedToken;
+  GridTokensWidget({
+    Key? key,
+    required this.state,
+    required this.tokenBloc,
+    required this.selectedToken,
+  }) : super(key: key);
+
+  final TokenBloc tokenBloc;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 15,
+        childAspectRatio: 4 / 2,
+      ),
+      itemCount: state.tokens.length,
+      itemBuilder: (context, index) {
+        return LabelSymbolDialogWidget(
+          symbleName: state.tokens[index].symbol ?? '',
+          selected: selectedToken == state.tokens[index],
+          onTap: () {
+            selectedToken = selectedToken.symbol == state.tokens[index].symbol ? TokenModel() : state.tokens[index];
+
+            tokenBloc.add(SelectTokenEvent(tokens: state.tokens, selectedToken: selectedToken));
+          },
+        );
+      },
     );
   }
 }
