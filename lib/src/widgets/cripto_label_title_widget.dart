@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:whallet/utils/change_theme.dart';
 
 class CriptoLabelTitleWidget extends StatelessWidget {
   final double width;
@@ -18,7 +20,9 @@ class CriptoLabelTitleWidget extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: Provider.of<ChangeTheme>(context).switchTheme
+            ? Theme.of(context).cardColor
+            : Theme.of(context).scaffoldBackgroundColor,
         border: Border.all(
           color: Theme.of(context).colorScheme.surface,
         ),
@@ -26,12 +30,6 @@ class CriptoLabelTitleWidget extends StatelessWidget {
           bottomRight: Radius.circular(25),
           topLeft: Radius.circular(25),
         ),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 7.5,
-            color: Theme.of(context).colorScheme.surface,
-          )
-        ],
       ),
       child: Center(
         child: Text(

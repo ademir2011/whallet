@@ -19,7 +19,10 @@ class ResponseMock extends Mock implements Response {}
 
 class FirebaseFirestoreMock extends Mock implements FirebaseFirestore {}
 
+class TokenRepositoryMock extends Mock implements TokenRepository {}
+
 void main() {
+  setUpAll(() {});
   test('Deve receber valores dos tokens', () async {
     final dioMock = DioMock();
     final responseMock = ResponseMock();

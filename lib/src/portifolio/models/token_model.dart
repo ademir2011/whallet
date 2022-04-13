@@ -12,6 +12,7 @@ class TokenModel {
   double? usdPrice;
   String? address;
   double? last24price;
+  List<double>? lastHourPrices;
 
   TokenModel({
     this.name,
@@ -25,6 +26,7 @@ class TokenModel {
     this.usdPrice,
     this.address,
     this.last24price,
+    this.lastHourPrices,
   });
   // : assert(address == null || RegExp(r'0x\w+').hasMatch(address), 'Endereço inválido');
 

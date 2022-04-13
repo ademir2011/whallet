@@ -17,12 +17,8 @@ class ResponseMock extends Mock implements Response {}
 
 class FirebaseFirestoreMock extends Mock implements FirebaseFirestore {}
 
-void main() {
-  testWidgets('Deve retornar uma lista de horários baseado no token', (tester) async {
-    final dioMock = DioMock();
-    final responseMock = ResponseMock();
-
-    when(() => responseMock.data).thenReturn(jsonDecode(r'''{
+final _data =
+    r'''{
                 "prices": [
                   [
                     1649435447047,
@@ -86,7 +82,17 @@ void main() {
                     20824518957.73859
                   ]
                 ]
-              }'''));
+              }''';
+
+void main() {
+  late DioMock dioMock;
+  late ResponseMock responseMock;
+  setUpAll(() {
+    dioMock = DioMock();
+    responseMock = ResponseMock();
+  });
+  testWidgets('Deve retornar uma lista de horários baseado no token', (tester) async {
+    when(() => responseMock.data).thenReturn(jsonDecode(_data));
 
     when(() => dioMock.get(any())).thenAnswer((invocation) async => responseMock);
 
@@ -104,6 +110,28 @@ void main() {
         ),
       ),
       isA<double>(),
+    );
+  });
+
+  testWidgets('Deve retornar uma lista de preços da última hora', (tester) async {
+    when(() => responseMock.data).thenReturn(jsonDecode(_data));
+
+    when(() => dioMock.get(any())).thenAnswer((invocation) async => responseMock);
+
+    final tokenRepository = TokenRepository(
+      firebaseFirestore: FirebaseFirestoreMock(),
+      coingeckoDatasource: CoingeckoDatasource(),
+      pancakeswapDatasource: PancakeswapDatasource(),
+      dio: dioMock,
+    );
+
+    expect(
+      await tokenRepository.getLastHourPrices(
+        tokenModel: TokenModel.symbol(symbol: 'btc').copyWith(
+          updatedAtTokenValue: DateTime.now(),
+        ),
+      ),
+      isA<List<double>>(),
     );
   });
 }

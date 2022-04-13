@@ -21,4 +21,12 @@ class SelectTokenEvent extends TokenEvent {
 
 class UpdateTokenEvent extends TokenEvent {}
 
-class RemoveTokenEvent extends TokenEvent {}
+class FetchDetailTokenEvent extends TokenEvent {
+  final TokenModel tokenModel;
+  FetchDetailTokenEvent({required this.tokenModel});
+}
+
+class RemoveTokenEvent extends TokenEvent {
+  final TokenModel tokenModel;
+  RemoveTokenEvent({required this.tokenModel});
+}

@@ -14,6 +14,7 @@ import 'package:whallet/src/portifolio/repository/token_repository.dart';
 import 'package:whallet/src/widgets/template_container_widget.dart';
 import 'package:whallet/src/widgets/card_price_widget.dart';
 import 'package:whallet/src/widgets/cripto_dialog_widget.dart';
+import 'package:whallet/utils/routes.dart';
 
 class PortfolioHomePage extends StatefulWidget {
   const PortfolioHomePage({Key? key}) : super(key: key);
@@ -78,8 +79,8 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
                   return GridView.builder(
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 7.5,
+                      mainAxisSpacing: 7.5,
                     ),
                     itemCount: state.tokens.length + 1,
                     itemBuilder: (ctx, index) {
@@ -97,6 +98,7 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
                             ).then((value) => portfolioBloc.add(FetchTokensPortfolioEvent()));
                           },
                           child: Container(
+                            margin: const EdgeInsets.all(6.5),
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.secondary,
                               borderRadius: BorderRadius.circular(25),
@@ -104,18 +106,26 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
                                 color: Theme.of(context).colorScheme.primary,
                               ),
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.add,
                               size: 40,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         );
                       }
-                      return CardPriceWidget(
-                        price: state.tokens[index].usdPrice ?? .0,
-                        tokenTitle: state.tokens[index].name ?? '',
-                        percentage:
-                            100 - ((state.tokens[index].last24price ?? 0) * 100) / (state.tokens[index].usdPrice ?? 1),
+                      return Padding(
+                        padding: const EdgeInsets.all(6.5),
+                        child: CardPriceWidget(
+                          price: state.tokens[index].usdPrice ?? .0,
+                          tokenTitle: state.tokens[index].name ?? '',
+                          percentage: 100 -
+                              ((state.tokens[index].last24price ?? 0) * 100) / (state.tokens[index].usdPrice ?? 1),
+                          onTap: () => Navigator.of(context).pushNamed(
+                            AppRoute.TOKEN_DETAIL,
+                            arguments: state.tokens[index],
+                          ),
+                        ),
                       );
                     },
                   );

@@ -12,6 +12,8 @@ class TokenBloc extends Bloc<TokenEvent, TokenState> {
     on<FetchTokensEvent>(_fetchTokensEvent);
     on<CreateTokenEvent>(_createTokenEvent);
     on<SelectTokenEvent>(_selectTokenEvent);
+    on<RemoveTokenEvent>(_removeTokenEvent);
+    on<FetchDetailTokenEvent>(_fetchDetailTokenEvent);
   }
 
   Future<void> _fetchTokensEvent(FetchTokensEvent event, emit) async {
@@ -30,7 +32,7 @@ class TokenBloc extends Bloc<TokenEvent, TokenState> {
       emit(ErrorTokenState(message: 'Não foi possível adicionar o token'));
     } else {
       try {
-        tokenRepository.saveToken(tokenModel: event.tokenModel);
+        await tokenRepository.saveToken(tokenModel: event.tokenModel);
         emit(SuccessTokenSaveState());
       } catch (e) {
         emit(ErrorTokenState(message: e.toString()));
@@ -40,5 +42,25 @@ class TokenBloc extends Bloc<TokenEvent, TokenState> {
 
   void _selectTokenEvent(SelectTokenEvent event, emit) {
     emit(SuccessSelectTokenState(tokens: event.tokens, selectedToken: event.selectedToken));
+  }
+
+  Future<void> _removeTokenEvent(RemoveTokenEvent event, emit) async {
+    emit(LoadingTokenState());
+    try {
+      await tokenRepository.removeToken(tokenModel: event.tokenModel);
+      emit(SuccessTokenRemoveState());
+    } catch (e) {
+      emit(ErrorTokenState(message: e.toString()));
+    }
+  }
+
+  Future<void> _fetchDetailTokenEvent(FetchDetailTokenEvent event, emit) async {
+    emit(LoadingTokenState());
+    try {
+      event.tokenModel.lastHourPrices = await tokenRepository.getLastHourPrices(tokenModel: event.tokenModel);
+      emit(SuccessTokenFetchState(tokenModel: event.tokenModel));
+    } catch (e) {
+      emit(ErrorTokenState(message: 'Error'));
+    }
   }
 }

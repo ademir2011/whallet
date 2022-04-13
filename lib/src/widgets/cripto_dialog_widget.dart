@@ -80,6 +80,7 @@ class _CriptoDialogWidgetState extends State<CriptoDialogWidget> {
                   ),
                   const SizedBox(height: 20),
                   TextFormFieldWidget(
+                    autofocus: true,
                     hintText: 'Buscar Cripto',
                     icon: const Icon(Icons.abc),
                     validator: (_) {},
@@ -93,8 +94,11 @@ class _CriptoDialogWidgetState extends State<CriptoDialogWidget> {
                   const SizedBox(height: 10),
                   if (state is LoadingTokenState) const Center(child: CircularProgressIndicator()),
                   if (state is SuccessTokenSaveState)
-                    const Center(
-                      child: Text('Token adicionado com sucesso.'),
+                    Center(
+                      child: Text(
+                        'Token adicionado com sucesso.',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ),
                   if (state is SuccessTokenState || state is SuccessSelectTokenState)
                     SizedBox(
@@ -119,7 +123,7 @@ class _CriptoDialogWidgetState extends State<CriptoDialogWidget> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      OutlineButtonWidget(onPressed: () => Navigator.of(context).pop(), title: 'Fechar'),
+                      OutlinedButtonWidget(onPressed: () => Navigator.of(context).pop(), title: 'Fechar'),
                       ElevatedButtonWidget(
                         onPressed: () => tokenBloc.add(CreateTokenEvent(tokenModel: selectedToken)),
                         title: 'Adicionar',

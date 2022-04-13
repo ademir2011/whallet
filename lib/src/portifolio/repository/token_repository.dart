@@ -22,7 +22,9 @@ class TokenRepository {
 
   Future<TokenModel?> getTokenByInfo({required TokenModel tokenModel}) async {
     if (tokenModel.symbol != null) {
-      return await coingeckoDatasource.getTokenBySymbol(tokenModel: tokenModel);
+      TokenModel? tokenModelResult = await coingeckoDatasource.getTokenBySymbol(tokenModel: tokenModel);
+      tokenModelResult!.updatedAtTokenValue = DateTime.now();
+      return tokenModelResult;
     } else if (tokenModel.address != null) {
       return await pancakeswapDatasource.getTokenByAddress(tokenModel: tokenModel);
     }
@@ -68,5 +70,37 @@ class TokenRepository {
     final prices = await getLast24TokenPrices(tokenModel: tokenModel);
     final price = prices.map((e) => e[1] as double).reduce((value, element) => value + element) / prices.length;
     return price;
+  }
+
+  Future<List<double>> getLastHourPrices({required TokenModel tokenModel}) async {
+    try {
+      final startDateNow = DateTime.now().subtract(const Duration(hours: 1)).millisecondsSinceEpoch.toString();
+      final endDateNow = DateTime.now().millisecondsSinceEpoch.toString();
+      final startFormatedDate = startDateNow.substring(0, startDateNow.toString().length - 3);
+      final endFormatedDate = endDateNow.substring(0, endDateNow.toString().length - 3);
+      final response = await dio.get(
+        'https://api.coingecko.com/api/v3/coins/${tokenModel.tokenId}/market_chart/range?vs_currency=usd&from=$startFormatedDate&to=$endFormatedDate',
+      );
+      List prices = (response.data as Map<String, dynamic>)['prices'] as List;
+      return prices.map((e) => double.parse(e[1].toString())).toList();
+    } catch (e) {
+      throw Exception('error');
+    }
+  }
+
+  Future<void> removeToken({required TokenModel tokenModel}) async {
+    try {
+      CollectionReference tokensCollection = FirebaseFirestore.instance.collection('tokens');
+      QuerySnapshot qs = await tokensCollection
+          .where(
+            'userId',
+            isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+          )
+          .where('tokenId', isEqualTo: tokenModel.tokenId)
+          .get();
+      await tokensCollection.doc(qs.docs.first.id).delete();
+    } catch (e) {
+      throw Exception('Erro');
+    }
   }
 }

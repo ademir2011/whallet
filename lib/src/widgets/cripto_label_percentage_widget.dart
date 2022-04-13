@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:whallet/utils/change_theme.dart';
 
 class CriptoLabelPercentageWidget extends StatelessWidget {
   final double width;
@@ -20,7 +22,9 @@ class CriptoLabelPercentageWidget extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: Provider.of<ChangeTheme>(context).switchTheme
+            ? Theme.of(context).cardColor
+            : Theme.of(context).scaffoldBackgroundColor,
         border: Border.all(
           color: isPositive ? Theme.of(context).colorScheme.primary : Theme.of(context).errorColor,
         ),

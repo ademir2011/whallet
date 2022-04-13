@@ -65,6 +65,7 @@ class _AuthSigninPageState extends State<AuthSigninPage> {
       title: 'Autenticação',
       subtitle: 'Faça login com seu e-mail e senha ou entre com sua rede social',
       size: size,
+      isOptions: true,
       child: BlocListener(
         bloc: authBloc,
         listener: (ctx, state) {
@@ -91,7 +92,10 @@ class _AuthSigninPageState extends State<AuthSigninPage> {
                 children: [
                   TextFormFieldWidget(
                     hintText: 'E-mail',
-                    icon: const Icon(Icons.email),
+                    icon: Icon(
+                      Icons.email,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                    ),
                     focusNode: emailFocus,
                     controller: emailController,
                     validator: (v) => (v ?? '').isEmpty ? 'Vazio' : null,
@@ -99,7 +103,10 @@ class _AuthSigninPageState extends State<AuthSigninPage> {
                   const SizedBox(height: 15),
                   TextFormFieldWidget(
                     hintText: 'Senha',
-                    icon: const Icon(Icons.password),
+                    icon: Icon(
+                      Icons.password,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                    ),
                     focusNode: passwordFocus,
                     controller: passwordController,
                     isPassword: true,
@@ -115,6 +122,7 @@ class _AuthSigninPageState extends State<AuthSigninPage> {
                         ),
                       if (state is! LoadingCheckCredentialAuthState)
                         Checkbox(
+                          activeColor: Theme.of(context).colorScheme.primary,
                           value: hasCredentialData,
                           onChanged: (value) {
                             if (value ?? false) {

@@ -37,7 +37,7 @@ class TemplateContainerWidget extends StatelessWidget {
                   if (title != null && subtitle != null)
                     Container(
                       height: size.height * 0.275,
-                      margin: const EdgeInsets.symmetric(horizontal: 35),
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -56,7 +56,7 @@ class TemplateContainerWidget extends StatelessWidget {
                     ),
                   SizedBox(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 35),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: child,
                     ),
                   ),

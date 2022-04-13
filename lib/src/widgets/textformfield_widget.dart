@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:whallet/utils/change_theme.dart';
 
 class TextFormFieldWidget extends StatelessWidget {
   final String hintText;
@@ -9,6 +11,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final bool isPassword;
   final TextInputAction textInputAction;
   final void Function(String)? onSubmitted;
+  final bool autofocus;
 
   const TextFormFieldWidget({
     Key? key,
@@ -20,6 +23,7 @@ class TextFormFieldWidget extends StatelessWidget {
     this.isPassword = false,
     required this.controller,
     required this.validator,
+    this.autofocus = false,
   }) : super(key: key);
 
   @override
@@ -29,14 +33,16 @@ class TextFormFieldWidget extends StatelessWidget {
       validator: validator,
       focusNode: focusNode,
       obscureText: isPassword,
+      autofocus: autofocus,
       textInputAction: textInputAction,
       onFieldSubmitted: onSubmitted ?? (_) {},
+      style: Theme.of(context).textTheme.bodyMedium,
       decoration: InputDecoration(
         fillColor: Theme.of(context).cardColor,
         filled: true,
         prefixIcon: icon,
         hintText: hintText,
-        hintStyle: Theme.of(context).textTheme.bodyMedium,
+        hintStyle: Theme.of(context).textTheme.bodyMedium!,
         focusColor: Colors.red,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),

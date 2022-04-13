@@ -25,3 +25,11 @@ class SuccessTokenState extends TokenState {
 }
 
 class SuccessTokenSaveState extends TokenState {}
+
+class SuccessTokenRemoveState extends TokenState {}
+
+class SuccessTokenFetchState extends TokenState {
+  TokenModel tokenModel;
+
+  SuccessTokenFetchState({required this.tokenModel});
+}

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:whallet/utils/change_theme.dart';
 
 class ElevatedButtonWidget extends StatefulWidget {
   final String title;
@@ -60,7 +62,11 @@ class _ElevatedButtonWidgetState extends State<ElevatedButtonWidget> {
                         if (widget.leftIcon != null) widget.leftIcon!,
                         Text(
                           widget.title,
-                          style: Theme.of(context).textTheme.labelSmall,
+                          style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                                color: Provider.of<ChangeTheme>(context).switchTheme
+                                    ? Theme.of(context).colorScheme.secondary
+                                    : Theme.of(context).textTheme.labelSmall!.color,
+                              ),
                         ),
                         if (widget.rightIcon != null) widget.rightIcon!,
                       ],
