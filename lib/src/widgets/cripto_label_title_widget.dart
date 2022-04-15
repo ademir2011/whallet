@@ -16,15 +16,14 @@ class CriptoLabelTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final switchTheme = Provider.of<ChangeTheme>(context).switchTheme;
     return Container(
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: Provider.of<ChangeTheme>(context).switchTheme
-            ? Theme.of(context).cardColor
-            : Theme.of(context).scaffoldBackgroundColor,
+        color: switchTheme ? Theme.of(context).colorScheme.primary : Theme.of(context).scaffoldBackgroundColor,
         border: Border.all(
-          color: Theme.of(context).colorScheme.surface,
+          color: switchTheme ? Theme.of(context).colorScheme.primary : Theme.of(context).scaffoldBackgroundColor,
         ),
         borderRadius: const BorderRadius.only(
           bottomRight: Radius.circular(25),
@@ -36,6 +35,8 @@ class CriptoLabelTitleWidget extends StatelessWidget {
           title,
           style: Theme.of(context).textTheme.bodySmall!.copyWith(
                 fontWeight: FontWeight.w800,
+                color: switchTheme ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.surface,
+                fontSize: 12.5,
               ),
           textAlign: TextAlign.center,
         ),

@@ -36,7 +36,7 @@ class TemplateContainerWidget extends StatelessWidget {
                   ),
                   if (title != null && subtitle != null)
                     Container(
-                      height: size.height * 0.275,
+                      height: size.height * 0.175,
                       margin: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

@@ -23,11 +23,11 @@ class _AppWidgetState extends State<AppWidget> {
       debugShowCheckedModeBanner: false,
       themeMode: Provider.of<ChangeTheme>(context).switchTheme ? ThemeMode.light : ThemeMode.dark,
       theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: const Color(0xffefeff3),
+        scaffoldBackgroundColor: const Color(0xfff4f9fb),
         colorScheme: const ColorScheme.dark().copyWith(
           primary: const Color(0xff5bc478),
-          secondary: const Color(0xffffffff),
-          surface: const Color(0xff5bc478),
+          secondary: const Color(0xfffefeff),
+          surface: const Color(0xff969797),
           error: const Color(0xffDC3545),
         ),
         textTheme: const TextTheme(

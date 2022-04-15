@@ -32,19 +32,21 @@ class CriptoLabelPercentageWidget extends StatelessWidget {
           bottomRight: Radius.circular(25),
           topLeft: Radius.circular(25),
         ),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 7.5,
-            color: isPositive ? Theme.of(context).colorScheme.primary : Theme.of(context).errorColor,
-          )
-        ],
+        boxShadow: Provider.of<ChangeTheme>(context).switchTheme
+            ? []
+            : [
+                BoxShadow(
+                  blurRadius: 7.5,
+                  color: isPositive ? Theme.of(context).colorScheme.primary : Theme.of(context).errorColor,
+                )
+              ],
       ),
       child: Center(
         child: Text(
           '${value.toStringAsFixed(2)}%',
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 fontWeight: FontWeight.w800,
-                fontSize: 12.5,
+                fontSize: 15,
                 color: isPositive ? Theme.of(context).colorScheme.primary : Theme.of(context).errorColor,
               ),
         ),

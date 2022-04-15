@@ -21,10 +21,10 @@ class CardPriceWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(25),
           border: Border.all(
-            color: Theme.of(context).colorScheme.surface,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           boxShadow: [
             BoxShadow(color: Theme.of(context).colorScheme.surface.withOpacity(.5), blurRadius: 5),
@@ -41,8 +41,8 @@ class CardPriceWidget extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 child: CriptoLabelTitleWidget(
                   title: tokenTitle,
-                  height: 35,
-                  width: 70,
+                  height: 45,
+                  width: 110,
                 ),
               ),
             ),
@@ -60,8 +60,8 @@ class CardPriceWidget extends StatelessWidget {
                 child: CriptoLabelPercentageWidget(
                   value: percentage,
                   isPositive: percentage >= 0,
-                  height: 37.5,
-                  width: 70,
+                  height: 45,
+                  width: 75,
                 ),
               ),
             ),

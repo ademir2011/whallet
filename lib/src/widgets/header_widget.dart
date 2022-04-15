@@ -28,7 +28,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
     return Row(
       children: [
         Container(
-          width: 200,
+          width: 165,
           height: widget.height,
           padding: const EdgeInsets.only(left: 20),
           decoration: BoxDecoration(

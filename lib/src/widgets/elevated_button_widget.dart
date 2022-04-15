@@ -39,7 +39,11 @@ class _ElevatedButtonWidgetState extends State<ElevatedButtonWidget> {
           setState(() {});
         }
       },
-      width: widget.isLoading ? 50 : 135,
+      width: widget.isLoading
+          ? 50
+          : (widget.leftIcon != null || widget.rightIcon != null)
+              ? 125
+              : 100,
       height: 50,
       duration: const Duration(seconds: 1),
       decoration: BoxDecoration(
@@ -63,6 +67,7 @@ class _ElevatedButtonWidgetState extends State<ElevatedButtonWidget> {
                         Text(
                           widget.title,
                           style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                                fontSize: 12.5,
                                 color: Provider.of<ChangeTheme>(context).switchTheme
                                     ? Theme.of(context).colorScheme.secondary
                                     : Theme.of(context).textTheme.labelSmall!.color,

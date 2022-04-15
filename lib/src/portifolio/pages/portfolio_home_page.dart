@@ -78,9 +78,7 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
                 if (state is SuccessPortfolioState) {
                   return GridView.builder(
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 7.5,
-                      mainAxisSpacing: 7.5,
+                      crossAxisCount: 2,
                     ),
                     itemCount: state.tokens.length + 1,
                     itemBuilder: (ctx, index) {

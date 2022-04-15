@@ -12,7 +12,7 @@ class OutlinedButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 135,
+      width: 100,
       height: 50,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
@@ -25,7 +25,9 @@ class OutlinedButtonWidget extends StatelessWidget {
         ),
         child: Text(
           title,
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: 12.5,
+              ),
         ),
         onPressed: onPressed,
       ),
