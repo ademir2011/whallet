@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whallet/src/auth/bloc/auth_bloc.dart';
 import 'package:whallet/src/auth/bloc/auth_event.dart';
 import 'package:whallet/src/auth/bloc/auth_state.dart';
-import 'package:whallet/src/auth/datasources/firebase_auth_email_password_datasource.dart';
+import 'package:whallet/src/auth/external/datasources/firebase_auth_signin_email_password_datasource.dart';
 import 'package:whallet/src/auth/repositories/auth_repository.dart';
 import 'package:whallet/src/widgets/template_container_widget.dart';
 import 'package:whallet/src/widgets/elevated_button_widget.dart';

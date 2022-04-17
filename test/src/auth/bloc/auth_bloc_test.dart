@@ -5,9 +5,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:whallet/src/auth/bloc/auth_bloc.dart';
 import 'package:whallet/src/auth/bloc/auth_event.dart';
 import 'package:whallet/src/auth/bloc/auth_state.dart';
-import 'package:whallet/src/auth/datasources/firebase_auth_email_password_datasource.dart';
+import 'package:whallet/src/auth/external/datasources/firebase_auth_signin_email_password_datasource.dart';
 import 'package:whallet/src/auth/enums/type_auth_enum.dart';
-import 'package:whallet/src/auth/models/user_model.dart';
+import 'package:whallet/src/auth/domain/entities/user_entity.dart';
 import 'package:whallet/src/auth/repositories/auth_repository.dart';
 
 class UserCredentialMock extends Mock implements UserCredential {}

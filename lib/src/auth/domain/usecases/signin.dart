@@ -1,0 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:whallet/src/auth/domain/entities/user_entity.dart';
+import 'package:whallet/src/auth/domain/errors/signin_exception.dart';
+import 'package:whallet/src/auth/domain/repositories/signin_repository_interface.dart';
+
+abstract class ISignin {
+  Future<UserCredential> call({required UserEntity userEntity});
+}
+
+class SignIn implements ISignin {
+  final ISignInRepository signInRepository;
+
+  SignIn({required this.signInRepository});
+
+  @override
+  Future<UserCredential> call({required UserEntity userEntity}) async {
+    if (userEntity.email.isEmpty || userEntity.password.isEmpty) return throw SigninDataException();
+
+    try {
+      return await signInRepository.signin(userEntity: userEntity);
+    } catch (e) {
+      return throw SigninError();
+    }
+  }
+}

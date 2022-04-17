@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:whallet/src/auth/models/user_model.dart';
+import 'package:whallet/src/auth/domain/entities/user_entity.dart';
 import 'package:whallet/src/portifolio/bloc_portfolio/portfolio_event.dart';
 import 'package:whallet/src/portifolio/bloc_portfolio/portfolio_state.dart';
 import 'package:whallet/src/portifolio/repository/portfolio_repository.dart';
