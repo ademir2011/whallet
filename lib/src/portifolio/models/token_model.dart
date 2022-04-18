@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class TokenModel {
+import 'package:whallet/src/portifolio/domain/entities/token_entity.dart';
+
+class TokenModel extends TokenEntity {
   String? name;
   String? docRef;
   String? userId;
@@ -28,7 +30,6 @@ class TokenModel {
     this.last24price,
     this.lastHourPrices,
   });
-  // : assert(address == null || RegExp(r'0x\w+').hasMatch(address), 'Endereço inválido');
 
   factory TokenModel.address({required String address}) => TokenModel().copyWith(
         address: address,
