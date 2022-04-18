@@ -8,16 +8,16 @@ abstract class ISignin {
 }
 
 class SignIn implements ISignin {
-  final ISignInRepository signInRepository;
+  final ISignInRepository iSignInRepository;
 
-  SignIn({required this.signInRepository});
+  SignIn({required this.iSignInRepository});
 
   @override
   Future<UserCredential> call({required UserEntity userEntity}) async {
     if (userEntity.email.isEmpty || userEntity.password.isEmpty) return throw SigninDataException();
 
     try {
-      return await signInRepository.signin(userEntity: userEntity);
+      return await iSignInRepository.signin(userEntity: userEntity);
     } catch (e) {
       return throw SigninError();
     }

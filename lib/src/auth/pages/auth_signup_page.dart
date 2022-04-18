@@ -1,13 +1,9 @@
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:whallet/src/auth/bloc/auth_bloc.dart';
 import 'package:whallet/src/auth/bloc/auth_event.dart';
 import 'package:whallet/src/auth/bloc/auth_state.dart';
-import 'package:whallet/src/auth/external/datasources/firebase_auth_signin_email_password_datasource.dart';
-import 'package:whallet/src/auth/repositories/auth_repository.dart';
 import 'package:whallet/src/widgets/auth_footer_widget.dart';
 import 'package:whallet/src/widgets/template_container_widget.dart';
 import 'package:whallet/src/widgets/textformfield_widget.dart';
@@ -20,11 +16,7 @@ class AuthSighUpPage extends StatefulWidget {
 }
 
 class _AuthSighUpPageState extends State<AuthSighUpPage> {
-  final authBloc = AuthBloc(
-    authRepository: AuthRepository(
-      firebaseAuthEmailPasswordDatasource: FirebaseAuthEmailPasswordDatasource(firebaseAuth: FirebaseAuth.instance),
-    ),
-  );
+  final authBloc = Modular.get<AuthBloc>();
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -38,7 +30,6 @@ class _AuthSighUpPageState extends State<AuthSighUpPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     emailController.dispose();
     passwordController.dispose();

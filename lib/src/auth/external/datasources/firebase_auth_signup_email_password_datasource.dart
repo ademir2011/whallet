@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:whallet/src/auth/domain/entities/user_entity.dart';
 import 'package:whallet/src/auth/external/datasources/firebase_auth_signout_email_password_datasource.dart';
+import 'package:whallet/src/auth/infra/datasources/signup_datasource.dart';
 
-class FirebaseAuthSignUpEmailPasswordDatasource {
+class FirebaseAuthSignUpEmailPasswordDatasource implements ISignUpDatasource {
   final FirebaseAuth firebaseAuth;
   final FirebaseAuthSignOutEmailPasswordDatasource firebaseAuthSignOutEmailPasswordDatasource;
 
@@ -11,7 +12,8 @@ class FirebaseAuthSignUpEmailPasswordDatasource {
     required this.firebaseAuthSignOutEmailPasswordDatasource,
   });
 
-  Future<UserCredential> signUp({required UserEntity userEntity}) async {
+  @override
+  Future<UserCredential> signup({required UserEntity userEntity}) async {
     final UserCredential userCredential;
     if (firebaseAuth.currentUser == null) {
       userCredential =

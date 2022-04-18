@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:whallet/utils/routes.dart';
 
 class SplashscreenStore {
@@ -9,7 +10,7 @@ class SplashscreenStore {
     init();
     Future.delayed(Duration(seconds: seconds), () {
       if (isLoaded) {
-        Navigator.pushReplacementNamed(context, AppRoute.AUTH_SIGNIN);
+        Modular.to.navigate('/auth_signin');
       } else {
         initSplash(context: context, seconds: 2);
       }

@@ -1,12 +1,8 @@
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:whallet/src/auth/bloc/auth_bloc.dart';
 import 'package:whallet/src/auth/bloc/auth_state.dart';
-import 'package:whallet/src/auth/external/datasources/firebase_auth_signin_email_password_datasource.dart';
-import 'package:whallet/src/auth/repositories/auth_repository.dart';
 import 'package:whallet/src/widgets/auth_footer_widget.dart';
 import 'package:whallet/src/widgets/template_container_widget.dart';
 import 'package:whallet/src/widgets/textformfield_widget.dart';
@@ -19,11 +15,7 @@ class AuthRecoveryPage extends StatefulWidget {
 }
 
 class _AuthRecoveryPageState extends State<AuthRecoveryPage> {
-  final authBloc = AuthBloc(
-    authRepository: AuthRepository(
-      firebaseAuthEmailPasswordDatasource: FirebaseAuthEmailPasswordDatasource(firebaseAuth: FirebaseAuth.instance),
-    ),
-  );
+  final authBloc = Modular.get<AuthBloc>();
 
   final emailController = TextEditingController();
 

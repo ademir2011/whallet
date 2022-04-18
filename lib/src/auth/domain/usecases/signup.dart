@@ -19,7 +19,7 @@ class SignUp implements ISignUp {
     try {
       return await iSignUpRepository.signup(userEntity: userEntity);
     } catch (e) {
-      return throw SignUpErrorException();
+      throw SignUpErrorException();
     }
   }
 }

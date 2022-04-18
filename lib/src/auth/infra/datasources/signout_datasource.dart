@@ -1,3 +1,3 @@
-abstract class SignOutDatasource {
+abstract class ISignOutDatasource {
   Future<void> signout();
 }

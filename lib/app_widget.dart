@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:provider/provider.dart';
 import 'package:whallet/src/auth/pages/auth_recovery_page.dart';
 import 'package:whallet/src/auth/pages/auth_signin_page.dart';
@@ -19,7 +20,7 @@ class AppWidget extends StatefulWidget {
 class _AppWidgetState extends State<AppWidget> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       themeMode: Provider.of<ChangeTheme>(context).switchTheme ? ThemeMode.light : ThemeMode.dark,
       theme: ThemeData.light().copyWith(
@@ -164,15 +165,8 @@ class _AppWidgetState extends State<AppWidget> {
         cardColor: const Color(0xff323238),
         errorColor: const Color(0xffDC3545),
       ),
-      home: const SplashscreenPage(),
-      routes: {
-        AppRoute.SPLASHSCREEN: (ctx) => const SplashscreenPage(),
-        AppRoute.AUTH_SIGNIN: (ctx) => const AuthSigninPage(),
-        AppRoute.AUTH_SIGNUP: (ctx) => const AuthSighUpPage(),
-        AppRoute.AUTH_RECOVERY: (ctx) => const AuthRecoveryPage(),
-        AppRoute.PORTFOLIO_HOME: (ctx) => const PortfolioHomePage(),
-        AppRoute.TOKEN_DETAIL: (ctx) => const TokenDetailPage(),
-      },
+      routeInformationParser: Modular.routeInformationParser,
+      routerDelegate: Modular.routerDelegate,
     );
   }
 }

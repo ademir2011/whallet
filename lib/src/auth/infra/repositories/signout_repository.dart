@@ -2,14 +2,14 @@ import 'package:whallet/src/auth/domain/repositories/signout_repository_interfac
 import 'package:whallet/src/auth/infra/datasources/signout_datasource.dart';
 
 class SignOutRepository implements ISignOutRepository {
-  final SignOutDatasource signOutDatasource;
+  final ISignOutDatasource iSignOutDatasource;
 
-  SignOutRepository({required this.signOutDatasource});
+  SignOutRepository({required this.iSignOutDatasource});
 
   @override
   Future<void> signOut() async {
     try {
-      return await signOutDatasource.signout();
+      return await iSignOutDatasource.signout();
     } catch (e) {
       throw Exception();
     }

@@ -5,14 +5,14 @@ import 'package:whallet/src/auth/infra/datasources/signin_datasource.dart';
 import 'package:whallet/src/auth/infra/models/user_model.dart';
 
 class SignInRepository implements ISignInRepository {
-  final SignInDatasource signInDatasource;
+  final ISignInDatasource iSignInDatasource;
 
-  SignInRepository({required this.signInDatasource});
+  SignInRepository({required this.iSignInDatasource});
 
   @override
   Future<UserCredential> signin({required UserEntity userEntity}) async {
     try {
-      return await signInDatasource.signin(userEntity: userEntity);
+      return await iSignInDatasource.signin(userEntity: userEntity);
     } catch (e) {
       throw Exception();
     }
