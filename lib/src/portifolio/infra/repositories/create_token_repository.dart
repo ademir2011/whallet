@@ -1,5 +1,5 @@
 import 'package:whallet/src/portifolio/domain/entities/token_entity.dart';
-import 'package:whallet/src/portifolio/domain/repositories/create_token_repository_interface.dart';
+import 'package:whallet/src/portifolio/domain/repositories/save_token_repository_interface.dart';
 import 'package:whallet/src/portifolio/infra/datasources/create_token_datasource_interface.dart';
 
 class CreateTokenRepository implements ICreateTokenRepository {

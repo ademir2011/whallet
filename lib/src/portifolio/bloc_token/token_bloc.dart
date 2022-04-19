@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whallet/src/portifolio/bloc_token/token_event.dart';
 import 'package:whallet/src/portifolio/bloc_token/token_state.dart';
-import 'package:whallet/src/portifolio/domain/usecases/create_token.dart';
-import 'package:whallet/src/portifolio/domain/usecases/fetch_detail_token.dart';
-import 'package:whallet/src/portifolio/domain/usecases/fetch_tokens.dart';
-import 'package:whallet/src/portifolio/domain/usecases/remove_token.dart';
+import 'package:whallet/src/portifolio/domain/usecases/save_token.dart';
+import 'package:whallet/src/portifolio/domain/usecases/get_token_info_by_token.dart';
+import 'package:whallet/src/portifolio/domain/usecases/fetch_tokens_by_symbol.dart';
+import 'package:whallet/src/portifolio/domain/usecases/remove_token_by_user.dart';
 
 class TokenBloc extends Bloc<TokenEvent, TokenState> {
   final CreateToken createToken;
