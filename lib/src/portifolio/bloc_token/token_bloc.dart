@@ -1,13 +1,22 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whallet/src/portifolio/bloc_token/token_event.dart';
 import 'package:whallet/src/portifolio/bloc_token/token_state.dart';
-import 'package:whallet/src/portifolio/repository/token_repository.dart';
+import 'package:whallet/src/portifolio/domain/usecases/create_token.dart';
+import 'package:whallet/src/portifolio/domain/usecases/fetch_detail_token.dart';
+import 'package:whallet/src/portifolio/domain/usecases/fetch_tokens.dart';
+import 'package:whallet/src/portifolio/domain/usecases/remove_token.dart';
 
 class TokenBloc extends Bloc<TokenEvent, TokenState> {
-  final TokenRepository tokenRepository;
+  final CreateToken createToken;
+  final FetchDetailToken fetchDetailToken;
+  final RemoveToken removeToken;
+  final FetchTokens fetchTokens;
 
   TokenBloc({
-    required this.tokenRepository,
+    required this.createToken,
+    required this.fetchDetailToken,
+    required this.fetchTokens,
+    required this.removeToken,
   }) : super(InitialTokenState()) {
     on<FetchTokensEvent>(_fetchTokensEvent);
     on<CreateTokenEvent>(_createTokenEvent);
@@ -19,7 +28,7 @@ class TokenBloc extends Bloc<TokenEvent, TokenState> {
   Future<void> _fetchTokensEvent(FetchTokensEvent event, emit) async {
     emit(LoadingTokenState());
     try {
-      final tokens = await tokenRepository.getTokensByInfo(tokenModel: event.tokenModel);
+      final tokens = await fetchTokens.fetchTokens(tokenEntity: event.tokenEntity);
       emit(SuccessTokenState(tokens: tokens));
     } catch (e) {
       emit(ErrorTokenState(message: 'Não foi possível carregar os tokens.'));
@@ -28,11 +37,11 @@ class TokenBloc extends Bloc<TokenEvent, TokenState> {
 
   Future<void> _createTokenEvent(CreateTokenEvent event, emit) async {
     emit(LoadingTokenState());
-    if ((event.tokenModel.symbol ?? '') == '') {
+    if ((event.tokenEntity.symbol ?? '') == '') {
       emit(ErrorTokenState(message: 'Não foi possível adicionar o token'));
     } else {
       try {
-        await tokenRepository.saveToken(tokenModel: event.tokenModel);
+        await createToken.createToken(tokenEntity: event.tokenEntity);
         emit(SuccessTokenSaveState());
       } catch (e) {
         emit(ErrorTokenState(message: e.toString()));
@@ -47,7 +56,7 @@ class TokenBloc extends Bloc<TokenEvent, TokenState> {
   Future<void> _removeTokenEvent(RemoveTokenEvent event, emit) async {
     emit(LoadingTokenState());
     try {
-      await tokenRepository.removeToken(tokenModel: event.tokenModel);
+      await removeToken.removeToken(tokenEntity: event.tokenEntity);
       emit(SuccessTokenRemoveState());
     } catch (e) {
       emit(ErrorTokenState(message: e.toString()));
@@ -57,8 +66,9 @@ class TokenBloc extends Bloc<TokenEvent, TokenState> {
   Future<void> _fetchDetailTokenEvent(FetchDetailTokenEvent event, emit) async {
     emit(LoadingTokenState());
     try {
-      event.tokenModel.lastHourPrices = await tokenRepository.getLastHourPrices(tokenModel: event.tokenModel);
-      emit(SuccessTokenFetchState(tokenModel: event.tokenModel));
+      event.tokenEntity.lastHourPrices =
+          (await fetchDetailToken.fetchDetailToken(tokenEntity: event.tokenEntity)).lastHourPrices;
+      emit(SuccessTokenFetchState(tokenEntity: event.tokenEntity));
     } catch (e) {
       emit(ErrorTokenState(message: 'Error'));
     }

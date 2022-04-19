@@ -1,20 +1,20 @@
-import 'package:whallet/src/portifolio/models/token_model.dart';
+import 'package:whallet/src/portifolio/domain/entities/token_entity.dart';
 
 abstract class TokenEvent {}
 
 class FetchTokensEvent extends TokenEvent {
-  final TokenModel tokenModel;
-  FetchTokensEvent({required this.tokenModel});
+  final TokenEntity tokenEntity;
+  FetchTokensEvent({required this.tokenEntity});
 }
 
 class CreateTokenEvent extends TokenEvent {
-  final TokenModel tokenModel;
-  CreateTokenEvent({required this.tokenModel});
+  final TokenEntity tokenEntity;
+  CreateTokenEvent({required this.tokenEntity});
 }
 
 class SelectTokenEvent extends TokenEvent {
-  final List<TokenModel> tokens;
-  TokenModel selectedToken;
+  final List<TokenEntity> tokens;
+  TokenEntity selectedToken;
 
   SelectTokenEvent({required this.tokens, required this.selectedToken});
 }
@@ -22,11 +22,11 @@ class SelectTokenEvent extends TokenEvent {
 class UpdateTokenEvent extends TokenEvent {}
 
 class FetchDetailTokenEvent extends TokenEvent {
-  final TokenModel tokenModel;
-  FetchDetailTokenEvent({required this.tokenModel});
+  final TokenEntity tokenEntity;
+  FetchDetailTokenEvent({required this.tokenEntity});
 }
 
 class RemoveTokenEvent extends TokenEvent {
-  final TokenModel tokenModel;
-  RemoveTokenEvent({required this.tokenModel});
+  final TokenEntity tokenEntity;
+  RemoveTokenEvent({required this.tokenEntity});
 }

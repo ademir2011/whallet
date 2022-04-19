@@ -1,4 +1,4 @@
-import 'package:whallet/src/portifolio/models/token_model.dart';
+import 'package:whallet/src/portifolio/domain/entities/token_entity.dart';
 
 abstract class TokenState {}
 
@@ -12,14 +12,14 @@ class ErrorTokenState extends TokenState {
 }
 
 class SuccessSelectTokenState extends TokenState {
-  final List<TokenModel> tokens;
-  TokenModel selectedToken;
+  final List<TokenEntity> tokens;
+  TokenEntity selectedToken;
 
   SuccessSelectTokenState({this.tokens = const [], required this.selectedToken});
 }
 
 class SuccessTokenState extends TokenState {
-  final List<TokenModel> tokens;
+  final List<TokenEntity> tokens;
 
   SuccessTokenState({this.tokens = const []});
 }
@@ -29,7 +29,7 @@ class SuccessTokenSaveState extends TokenState {}
 class SuccessTokenRemoveState extends TokenState {}
 
 class SuccessTokenFetchState extends TokenState {
-  TokenModel tokenModel;
+  TokenEntity tokenEntity;
 
-  SuccessTokenFetchState({required this.tokenModel});
+  SuccessTokenFetchState({required this.tokenEntity});
 }
